@@ -17,7 +17,7 @@ Phase 1 (brand + MVP) is in progress. Working so far:
   - A failed script is revised up to 2 times.
   - Narration prep (Haiku 5.5) spells out numbers for the voice; code checks its output.
   - Each run writes a `review.md`, plus the cost of each Claude call.
-- **Pilot 01** script draft: [docs/PILOT-01.md](docs/PILOT-01.md) (waiting for approval).
+- **Pilot 01** script draft: [docs/PILOT-01.md](docs/PILOT-01.md) (approved; next: fact check and render).
 
 ## Dev
 ```bash

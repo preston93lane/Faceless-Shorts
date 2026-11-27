@@ -56,8 +56,16 @@ Each series has its own badge at the top of the frame:
 - **HOW IT WORKS**
 - **ANIMAL SUPERPOWERS**
 - **YOUR AMAZING BODY**
+- **WILD BIOLOGY**: mind-blowing biochemistry and life science (cells, molecules, microbes, plants, DNA). Added 2026-11-27 at the owner's request; the badge name is provisional.
 - **SPACE & SCALE**
 - **MYTH BUSTED**
+
+**Launch focus (first two weeks), owner pick of 2026-11-27:** WHAT IF?, YOUR AMAZING BODY, WILD BIOLOGY, SPACE & SCALE.
+
+## Content rules (owner decisions, 2026-11-27)
+- **Units:** serious videos use US units first, with metric only where a detail requires it (metric can go on the paper card). Absurd or playful videos measure in funny units like bananas, Bugattis or grains of rice, to get people commenting, with the math still correct.
+- **Dark topics:** disasters, disease, predators, extinction and historical deaths are allowed when told calmly and factually. No gore, no graphic detail, no fear-bait.
+- These rules are in the Script Writer's brief (`src/agents/style-guide.ts`).
 
 ## To do
 - [ ] Image-generation style prompt (fal.ai) locked to this look, tested on 10 subjects. Needs fal credit.

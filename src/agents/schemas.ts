@@ -5,7 +5,7 @@
  */
 import { z } from "zod";
 
-export const SERIES = ["WHAT IF?", "HOW IT WORKS", "ANIMAL SUPERPOWERS", "YOUR AMAZING BODY", "SPACE & SCALE", "MYTH BUSTED"] as const;
+export const SERIES = ["WHAT IF?", "HOW IT WORKS", "ANIMAL SUPERPOWERS", "YOUR AMAZING BODY", "WILD BIOLOGY", "SPACE & SCALE", "MYTH BUSTED"] as const;
 export type Series = (typeof SERIES)[number];
 
 export const BEAT_ROLES = ["hook", "surprise", "beat", "crazy", "loop"] as const;

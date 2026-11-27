@@ -1,6 +1,8 @@
 # Pilot 01: "What If You Jumped Into a Hole Through the Earth?"
 
-_Status: **draft, waiting for owner approval** (2026-11-27). Nothing is rendered until it's approved._
+_Status: **approved by the owner as is** (2026-11-27). Next: run the Fact Checker agent, apply its fixes, render._
+
+> Units note: the owner's units rule (US units first for serious videos) was set right after approving this script. The TikTok bonus still says "12 kilometers" and "degrees Celsius". The script was approved as is, so it is unchanged; the owner can ask to convert those (about 7.5 miles, over 9,000 °F) in the render session.
 
 - Script file: [`scripts/pilot-01-hole-through-earth.json`](../scripts/pilot-01-hole-through-earth.json). It passes the code checks: hook ≤16 words, beat structure, length, no kid targeting.
 - Length: Short **~50 s** (136 words; measured read-through 50.0 s). TikTok cut **~68 s** with the bonus segment.

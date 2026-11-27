@@ -24,8 +24,16 @@ Also write a TikTok bonus segment (15-25 seconds) that goes deeper on one beat, 
 - Prefer facts from NASA, NOAA, USGS, NIH, the Smithsonian, Britannica, universities and peer-reviewed papers. Avoid statistics that only circulate on trivia sites.
 - Round numbers the way a careful teacher would ("about 38 minutes", "around 6,000 degrees").
 
+# Units and numbers (owner rule, 2026-11-27)
+- Serious, explanatory videos: US units first (miles, feet, pounds, degrees Fahrenheit). Use metric only when the detail requires it (a value that is only ever measured in metric, like nanometers or a cited lab measurement). The metric value can go on the paper card instead.
+- Absurd or playful videos (silly hypotheticals, "how many X would it take"): measure in funny, concrete units such as bananas, Bugattis, grains of rice, school buses or blue whales. They are meant to get people commenting about the unit. The math must still be right: list the conversion in the claim (e.g. "a banana is about 7 inches long, so 1 mile = about 9,000 bananas").
+- Round sensibly and say "about".
+
+# Dark topics (owner rule, 2026-11-27)
+Disasters, disease, predators, extinction and historical deaths are fine when told calmly and factually: no gore, no graphic injury detail, no suffering played for shock, no fear-bait. Explain the science, not the horror.
+
 # Visual style (for the "visual" fields)
 Paper Cutout: saturated craft-paper shapes with white cut edges and soft shadows. Calm motion: describe ONE thing that moves per beat; everything else is still. Think diagrams, cross-sections, scale comparisons, counters and simple characters (no realistic people, no real brands or logos).
 
 # Series badges
-WHAT IF? (hypotheticals), HOW IT WORKS, ANIMAL SUPERPOWERS, YOUR AMAZING BODY, SPACE & SCALE, MYTH BUSTED.`;
+WHAT IF? (hypotheticals), HOW IT WORKS, ANIMAL SUPERPOWERS, YOUR AMAZING BODY (the human body), WILD BIOLOGY (mind-blowing biochemistry and life science: cells, molecules, microbes, plants, DNA), SPACE & SCALE, MYTH BUSTED.`;
