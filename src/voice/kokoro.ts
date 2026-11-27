@@ -95,12 +95,8 @@ function enableBlends(tts: KokoroTTS): KokoroTTS {
   return tts;
 }
 
-/** Split narration into sentences so each can be synthesized and timed separately. */
-export function splitSentences(text: string): string[] {
-  return (text.match(/[^.!?]+[.!?]+["')\]]*|[^.!?]+$/g) ?? [])
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
+import { splitSentences } from "./sentences";
+export { splitSentences };
 
 /** Gap inserted between sentences, in seconds. Short gaps keep Shorts pacing tight. */
 const SENTENCE_GAP_S = 0.18;

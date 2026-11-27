@@ -110,7 +110,7 @@ Estimated LLM cost is about **$1.00–1.50 per Short**. Almost all of it sits in
 ### Cost per video (budget tier, recommended to start)
 | Item | Short (45s + TikTok cut) | Long-form (10 min) |
 |---|---|---|
-| Claude (Opus: scout, script, fact-check with web search, storyboard, QA vision; Haiku: mechanical steps) | ~$1.00–1.50 (script stage measured ~$0.80–1.20) | ~$3–5 |
+| Claude (Opus: scout, script, fact-check with web search, storyboard, QA vision; Haiku: mechanical steps) | ~$1.00–1.50 (script stage measured ~$0.80–1.20) | ~$1.40–2.00 with the owner's research pack; ~$3–5 without ([LONG-FORM.md](LONG-FORM.md)) |
 | Images (8–14 new; library reuse grows) | ~$0.05–0.30 | ~$0.50–1.00 |
 | Voice (Kokoro) | $0 | $0 |
 | Render (GitHub Actions) | $0 | $0 |
@@ -161,7 +161,7 @@ These go into **GitHub Actions secrets**, or this cloud environment's secrets fo
 2. **New YouTube channel** on a Brand Account, plus a **Google Cloud project** with **YouTube Data API v3** and **YouTube Analytics API** enabled and an OAuth client. I'll generate the refresh-token script.
 3. **TikTok account** (personal creator account; Creator Rewards requires 18+ and an eligible country) plus a **TikTok for Developers app** with Login Kit and Content Posting API (`video.upload`; later `video.publish` + audit). The app review needs a website and privacy-policy URL; I can make a simple GitHub Pages site for that.
 4. **fal.ai or Replicate API key** for images (~$10 prepaid to start).
-5. **Dropbox app** (dropbox.com/developers → Create app → Scoped access → **App folder**), with `files.content.write` and `files.content.read` permissions. I'll give you a short script to get its refresh token. App-folder access keeps the pipeline inside its own folder.
+5. **Dropbox app** (dropbox.com/developers → Create app → Scoped access → **App folder**, named **Wonderscraps**), with `files.content.write` and `files.content.read` permissions. I'll give you a short script to get its refresh token. App-folder access keeps the pipeline inside its own folder: Dropbox creates `/Apps/Wonderscraps`, and I'll move the tracking folder (`/Wonderscraps`, made 2026-11-27) into it and set `DROPBOX_ROOT` to empty.
 6. _Later, optional:_ **ElevenLabs** API key (Creator plan, $22/mo) if we upgrade from Kokoro.
 
 ### Connectors (for me to research, manage and report interactively)

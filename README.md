@@ -18,6 +18,13 @@ Phase 1 (brand + MVP) is in progress. Working so far:
   - Narration prep (Haiku 5.5) spells out numbers for the voice; code checks its output.
   - Each run writes a `review.md`, plus the cost of each Claude call.
   - Optional **research packs** ([docs/RESEARCH-PACKS.md](docs/RESEARCH-PACKS.md)): facts researched ahead of time in your own Claude session. Claims a pack covers are checked against it without web search; code checks every pack link.
+- **Video stage** (`src/pipeline/make-short.ts`, `npm run make:short`): script → finished Short in one command.
+  - **Storyboard** (Opus 5.5, `src/agents/storyboard.ts`) picks a shot template per moment, the cue words that trigger motion, and the illustrations needed; it must vary the template sequence from recent uploads.
+  - **Shot templates** (`src/video/scenes/templates.tsx`): title, hero, big-number, compare, scale, list, arrows, progress, fact, count.
+  - **Illustrations** (`src/assets/images.ts`): paper cut-outs from FLUX.1 [dev] on fal.ai (~$0.027 each with background removal), kept in `public/assets/library/` and reused by key.
+  - **Sound**: paper swish and pop effects synthesized in code (`src/audio/sfx.ts`), an optional music bed from `public/music/` ducked under the voice, loudness normalized to -14 LUFS.
+  - **QA** (`src/agents/qa.ts`): size, frame rate, duration, loudness, black frames, shot pacing, caption timing, variety vs recent uploads, then an Opus vision review of one frame per shot and every new illustration. Wrong illustrations are redrawn and the video re-rendered.
+  - Uploads the video and its review notes to Dropbox `Wonderscraps/01 Review` once the Dropbox app keys are set (`src/publish/dropbox.ts`).
 - **Pilot 01**: [docs/PILOT-01.md](docs/PILOT-01.md). Approved, and a draft Short is rendered (`src/demo/build-pilot-01.ts`, scenes in `src/video/scenes/hole.tsx`). The Fact Checker passed every number; two wording fixes were noted and the script was kept as approved (2026-11-27).
 
 ## Dev
@@ -29,6 +36,8 @@ npm run typecheck
 # Script stage (needs ANTHROPIC_API_KEY; in Claude Code cloud sessions set WONDERSCRAPS_ANTHROPIC_KEY instead)
 npm run script:new -- --topic "What if you fell through the Earth?" --series "WHAT IF?"
 npm run script:check -- --script scripts/pilot-01-hole-through-earth.json
+npm run make:short -- --from out/scripts/<slug>          # finished Short from a fact-checked script
+npm run make:short -- --research research/<slug>.json    # research pack → script → Short
 npm run research:validate -- research/hole-through-earth.json   # check a research pack (free)
 npm run script:new -- --research research/hole-through-earth.json
 # Fact-check research runs through the Message Batches API (half price, minutes to hours). Add --now for an immediate, full-price run.

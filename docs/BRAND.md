@@ -79,7 +79,7 @@ Each series has its own badge at the top of the frame:
 - WHAT IF?: swallowing a drop of a neutron star. Yes.
 
 ## To do
-- [ ] Image-generation style prompt (fal.ai) locked to this look, tested on 10 subjects. Needs fal credit.
+- [x] Image-generation style prompt locked (`IMAGE_STYLE` in `src/assets/images.ts`), 2026-11-27. FLUX.1 [dev] beat [schnell] on every test subject (real layered paper, white cut edge, better anatomy). Lesson: describe subjects by shape, never by nickname ("water bear" drew a bear).
 - [ ] End card / subtle `wonderscraps` paper tag.
 - [ ] Long-form thumbnail template.
 - [ ] Channel art: avatar and banner.

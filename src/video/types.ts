@@ -21,6 +21,10 @@ export type VideoSpec = {
   durationMs: number;
   captions: Caption[];
   scenes: SceneSpec[];
+  /** Short sound effects (relative to /public), e.g. a paper swish on shot changes. */
+  sfx?: { atMs: number; file: string; volume?: number }[];
+  /** Background music bed, relative to /public. Kept low and ducked under the narration. */
+  music?: { file: string; volume?: number };
 };
 
 export const FPS = 30;

@@ -12,7 +12,8 @@
     "script:new": "NODE_USE_ENV_PROXY=1 tsx src/pipeline/script-stage.ts",
     "script:check": "NODE_USE_ENV_PROXY=1 tsx src/pipeline/script-stage.ts",
     "research:validate": "NODE_USE_ENV_PROXY=1 tsx src/agents/research-pack.ts",
-    "voice:samples": "NODE_USE_ENV_PROXY=1 tsx src/demo/voice-samples.ts"
+    "voice:samples": "NODE_USE_ENV_PROXY=1 tsx src/demo/voice-samples.ts",
+    "make:short": "NODE_USE_ENV_PROXY=1 tsx src/pipeline/make-short.ts"
   },
   "devDependencies": {
     "@types/node": "22.18.0",
@@ -32,6 +33,7 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "remotion": "4.0.547",
+    "sharp": "0.34.5",
     "zod": "^4.6.7"
   }
 }

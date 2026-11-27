@@ -55,6 +55,8 @@ export type StructuredRequest<S extends z.ZodType> = {
   user: string;
   schema: S;
   maxTokens?: number;
+  /** Images shown before the text (vision review). */
+  images?: { mediaType: "image/jpeg" | "image/png"; data: string; caption?: string }[];
 };
 
 export type ResearchRequest = {
@@ -99,15 +101,20 @@ export class ClaudeLlm implements Llm {
   }
 
   async structured<S extends z.ZodType>(req: StructuredRequest<S>): Promise<z.infer<S>> {
-    const res = await this.client.beta.messages.parse({
-      model: MODELS[req.model],
-      max_tokens: req.maxTokens ?? 16000,
-      // The system prompt is stable across runs, so cache it.
-      system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
-      messages: [{ role: "user", content: req.user }],
-      output_config: { effort: req.effort, format: betaZodOutputFormat(req.schema) },
-      ...this.fallbackParams(req.model),
-    });
+    const res = await this.client.beta.messages.parse(
+      {
+        model: MODELS[req.model],
+        max_tokens: req.maxTokens ?? 16000,
+        // The system prompt is stable across runs, so cache it.
+        system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
+        messages: [{ role: "user", content: userContent(req) }],
+        output_config: { effort: req.effort, format: betaZodOutputFormat(req.schema) },
+        ...this.fallbackParams(req.model),
+      },
+      // An explicit timeout lets large outputs (storyboards) run without streaming; the SDK otherwise refuses
+      // max_tokens above ~21k on a plain request.
+      { timeout: 20 * 60 * 1000 },
+    );
     this.record(req.step, req.model, res.usage);
     checkStop(req.step, res.stop_reason, res.stop_details);
     if (res.parsed_output == null) throw new Error(`${req.step}: model output did not match the schema`);
@@ -192,6 +199,17 @@ export class ClaudeLlm implements Llm {
       searches * PRICE.webSearch;
     this.ledger.add({ step, model: MODELS[model], inputTokens: input, outputTokens: usage.output_tokens, webSearches: searches, usd });
   }
+}
+
+function userContent(req: { user: string; images?: StructuredRequest<z.ZodType>["images"] }): string | Anthropic.Beta.BetaContentBlockParam[] {
+  if (!req.images?.length) return req.user;
+  const blocks: Anthropic.Beta.BetaContentBlockParam[] = [];
+  for (const im of req.images) {
+    if (im.caption) blocks.push({ type: "text", text: im.caption });
+    blocks.push({ type: "image", source: { type: "base64", media_type: im.mediaType, data: im.data } });
+  }
+  blocks.push({ type: "text", text: req.user });
+  return blocks;
 }
 
 function checkStop(step: string, stop: string | null, details: unknown) {
