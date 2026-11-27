@@ -17,7 +17,8 @@ Phase 1 (brand + MVP) is in progress. Working so far:
   - A failed script is revised up to 2 times.
   - Narration prep (Haiku 5.5) spells out numbers for the voice; code checks its output.
   - Each run writes a `review.md`, plus the cost of each Claude call.
-- **Pilot 01**: [docs/PILOT-01.md](docs/PILOT-01.md). Approved, and a draft Short is rendered (`src/demo/build-pilot-01.ts`, scenes in `src/video/scenes/hole.tsx`). The Fact Checker agent hasn't run on it yet.
+  - Optional **research packs** ([docs/RESEARCH-PACKS.md](docs/RESEARCH-PACKS.md)): facts researched ahead of time in your own Claude session. Claims a pack covers are checked against it without web search; code checks every pack link.
+- **Pilot 01**: [docs/PILOT-01.md](docs/PILOT-01.md). Approved, and a draft Short is rendered (`src/demo/build-pilot-01.ts`, scenes in `src/video/scenes/hole.tsx`). The Fact Checker passed every number; two wording fixes were noted and the script was kept as approved (2026-11-27).
 
 ## Dev
 ```bash
@@ -28,6 +29,8 @@ npm run typecheck
 # Script stage (needs ANTHROPIC_API_KEY; in Claude Code cloud sessions set WONDERSCRAPS_ANTHROPIC_KEY instead)
 npm run script:new -- --topic "What if you fell through the Earth?" --series "WHAT IF?"
 npm run script:check -- --script scripts/pilot-01-hole-through-earth.json
+npm run research:validate -- research/hole-through-earth.json   # check a research pack (free)
+npm run script:new -- --research research/hole-through-earth.json
 # Fact-check research runs through the Message Batches API (half price, minutes to hours). Add --now for an immediate, full-price run.
 npm run voice:samples        # voice comparison clips
 npx tsx src/demo/read-script.ts scripts/pilot-01-hole-through-earth.json public/generated/pilot-01/draft-read.wav

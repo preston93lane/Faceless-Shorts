@@ -11,6 +11,7 @@
     "test": "vitest run",
     "script:new": "NODE_USE_ENV_PROXY=1 tsx src/pipeline/script-stage.ts",
     "script:check": "NODE_USE_ENV_PROXY=1 tsx src/pipeline/script-stage.ts",
+    "research:validate": "NODE_USE_ENV_PROXY=1 tsx src/agents/research-pack.ts",
     "voice:samples": "NODE_USE_ENV_PROXY=1 tsx src/demo/voice-samples.ts"
   },
   "devDependencies": {

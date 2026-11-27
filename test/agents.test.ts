@@ -5,6 +5,7 @@ import { applyRules, claimsForPrompt, factCheck, feedbackFrom, searchBudget, sou
 import { ClaudeLlm, type Llm, type ResearchRequest, type ResearchResult, type StructuredRequest } from "../src/agents/llm";
 import { checkSpoken } from "../src/agents/narration-prep";
 import { type FactCheck, fullNarration, type Script, ScriptSchema, TIKTOK_BONUS_ID, tiktokNarration, validateScript } from "../src/agents/schemas";
+import { judgeProbe, packForWriter, packProblems, type ResearchPack, usableFacts, verifyPack } from "../src/agents/research-pack";
 import { isReputable, normalizeUrl } from "../src/agents/sources";
 import { runScriptStage } from "../src/pipeline/script-stage";
 import { parseVoiceSpec } from "../src/voice/kokoro";
@@ -223,7 +224,7 @@ describe("script stage", () => {
     });
     const llm = new FakeLlm();
     const edited: Script = { ...pilot, beats: pilot.beats.map((b) => (b.id === pilot.claims[1].beatId ? { ...b, narration: `${b.narration} Wow.` } : b)) };
-    await factCheck(llm, edited, { script: pilot, result: supported(pilot.claims) });
+    await factCheck(llm, edited, { prior: { script: pilot, result: supported(pilot.claims) } });
     const changed = pilot.claims.filter((c) => c.beatId === pilot.claims[1].beatId).map((c) => c.id);
     const asked = [...llm.researched[0].user.matchAll(/^(c\d+):/gm)].map((m) => m[1]);
     expect(asked).toEqual(changed);
@@ -264,5 +265,109 @@ describe("batch research", () => {
     expect(params).not.toHaveProperty("stream");
     // 1M input tokens at $4/M, halved, plus 10 searches at full price.
     expect(llm.ledger.totalUsd).toBeCloseTo(2 + 0.1);
+  });
+});
+
+describe("research packs", () => {
+  const pack: ResearchPack = {
+    topic: "hole through the Earth",
+    series: "WHAT IF?",
+    researchedOn: "2026-11-27",
+    facts: [
+      {
+        id: "f1",
+        fact: "A fall through a pole-to-pole tunnel takes about 38 minutes with Earth's real density.",
+        sources: [
+          { url: "https://arxiv.org/abs/1308.1342", publisher: "arXiv", supports: "38 min 11 s" },
+          { url: "https://phys.org/news/2015-03-fall-hole-earth.html", publisher: "Phys.org", supports: "38 minutes" },
+        ],
+      },
+      {
+        id: "f2",
+        fact: "Gravity is zero at Earth's center.",
+        sources: [
+          { url: "https://www.wtamu.edu/missing-page", publisher: "WTAMU", supports: "" },
+          { url: "https://randomblog.example/zero-g", publisher: "Blog", supports: "" },
+          { url: "https://www.nasa.gov/a", publisher: "NASA", supports: "" },
+        ],
+      },
+    ],
+    avoid: ["you would fall forever"],
+  };
+  const probe = async (url: string) => (url.includes("missing") ? { status: 404 } : url.includes("phys.org") ? { status: 403 } : { status: 200 });
+
+  it("treats loading pages and bot-blocking sites as real, and 404s and dead hosts as not", () => {
+    expect(judgeProbe({ status: 200 }).ok).toBe(true);
+    expect(judgeProbe({ status: 403 }).ok).toBe(true);
+    expect(judgeProbe({ status: 404 }).ok).toBe(false);
+    expect(judgeProbe({ error: "getaddrinfo ENOTFOUND" }).ok).toBe(false);
+  });
+
+  it("only uses facts with 2 working reputable sources on different sites", async () => {
+    const v = await verifyPack(pack, probe);
+    expect(usableFacts(v).map((f) => f.id)).toEqual(["f1"]);
+    const p = packProblems(v).join("\n");
+    expect(p).toMatch(/missing-page rejected: HTTP 404/);
+    expect(p).toMatch(/randomblog\.example\/zero-g rejected: site is not on the reputable list/);
+    expect(p).toMatch(/f2 has 1 usable source site/);
+    expect(packForWriter(v)).toContain("38 minutes");
+    expect(packForWriter(v)).not.toContain("zero at Earth's center");
+    expect(packForWriter(v)).toContain("Do not say: you would fall forever");
+  });
+
+  it("says the network is blocked, instead of blaming every link, when nothing loads", async () => {
+    const v = await verifyPack(pack, async () => ({ error: "fetch failed" }));
+    expect(v.offline).toBe(true);
+    expect(usableFacts(v)).toEqual([]);
+    expect(packProblems(v)).toHaveLength(1);
+    expect(packProblems(v)[0]).toMatch(/can't reach the web/);
+  });
+
+  it("judges covered claims from the pack without search and web-checks only the rest", async () => {
+    const v = await verifyPack(pack, probe);
+    const [c1, c2, ...others] = pilot.claims;
+    const researched: string[] = [];
+    const llm: Llm = {
+      async structured<S extends z.ZodType>(req: StructuredRequest<S>): Promise<z.infer<S>> {
+        if (req.step === "fact-check-pack")
+          return {
+            claims: [
+              { claimId: c1.id, coverage: "covered", verdict: "supported", factIds: ["f1", "f99"], explanation: "", suggestedRewrite: null },
+              // Relies on a fact with too few sources, so code downgrades it.
+              { claimId: c2.id, coverage: "covered", verdict: "supported", factIds: ["f2"], explanation: "", suggestedRewrite: null },
+              ...others.map((c) => ({ claimId: c.id, coverage: "not_covered", verdict: "unsupported", factIds: [], explanation: "", suggestedRewrite: null })),
+            ],
+            notes: "",
+          } as z.infer<S>;
+        return {
+          claims: others.map((c) => ({
+            claimId: c.id,
+            verdict: "supported",
+            explanation: "",
+            suggestedRewrite: null,
+            sources: [
+              { url: "https://arxiv.org/abs/1", publisher: "arXiv", supports: "" },
+              { url: "https://phys.org/x", publisher: "Phys.org", supports: "" },
+            ],
+          })),
+          notes: "",
+        } as z.infer<S>;
+      },
+      async research(req) {
+        researched.push(req.user);
+        return { text: "", retrievedUrls: ["https://arxiv.org/abs/1", "https://phys.org/x"], citedUrls: [] };
+      },
+    };
+    const r = await factCheck(llm, pilot, { pack: v });
+    expect(researched).toHaveLength(1);
+    expect(researched[0]).not.toContain(`${c1.id}: ${c1.claim}`);
+    expect(researched[0]).not.toContain(`${c2.id}: ${c2.claim}`);
+    for (const c of others) expect(researched[0]).toContain(`${c.id}: ${c.claim}`);
+    const byId = new Map(r.claims.map((c) => [c.claimId, c]));
+    expect(byId.get(c1.id)?.verdict).toBe("supported");
+    expect(byId.get(c1.id)?.fromPack).toBe(true);
+    expect(byId.get(c1.id)?.acceptedSources.map((s) => s.publisher)).toEqual(["arXiv", "Phys.org"]);
+    expect(byId.get(c2.id)?.verdict).toBe("needs_rewrite");
+    expect(byId.get(c2.id)?.downgradedBecause).toMatch(/0 working reputable source/);
   });
 });

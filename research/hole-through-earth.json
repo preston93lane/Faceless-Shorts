@@ -1,0 +1,196 @@
+{
+  "topic": "What if you jumped into a hole through the Earth?",
+  "series": "WHAT IF?",
+  "researchedOn": "2026-11-27",
+  "facts": [
+    {
+      "id": "f1",
+      "fact": "Falling through a straight pole-to-pole tunnel through Earth's center (pole to pole so Earth's rotation does not push the faller into the wall), with no air and ignoring heat, takes about 38 minutes to reach the far surface using Earth's realistic density profile (Klotz 2015, American Journal of Physics: about 38 min; about 42 min in the uniform-density model). The faller does not fall forever but reaches the other side.",
+      "sources": [
+        {
+          "url": "https://pubs.aip.org/aapt/ajp/article-abstract/83/3/231/1057885",
+          "publisher": "American Journal of Physics (Klotz)",
+          "supports": "Straight tunnels take anywhere from 42 min for short trips to 38 min for long ones."
+        },
+        {
+          "url": "https://arxiv.org/pdf/1308.1342",
+          "publisher": "arXiv (Klotz preprint)",
+          "supports": "Falling through the diameter takes 38 min 11 s in the realistic model, 42 min 12 s with uniform density."
+        },
+        {
+          "url": "https://www.science.org/content/article/how-long-would-it-take-you-fall-through-earth",
+          "publisher": "Science",
+          "supports": "Reports the 38 min 11 s result, which cut 4 minutes off the textbook 42."
+        },
+        {
+          "url": "https://phys.org/news/2015-03-fall-hole-earth.html",
+          "publisher": "Phys.org",
+          "supports": "'38 minutes (and 11 seconds)... not 42.'"
+        }
+      ]
+    },
+    {
+      "id": "f2",
+      "fact": "In that fall (no air), the faller speeds up the whole way to the center, reaching a peak speed of nearly 5 miles per second or more: about 7.9 km/s (about 4.9 mi/s, about 17,700 mph) in the uniform-density model, and somewhat higher with Earth's real density profile (Klotz 2015 gives about 17,900 mph). Either way the peak exceeds 17,000 miles per hour (4.9 mi/s x 3,600 s/h = about 17,600 mph).",
+      "sources": [
+        {
+          "url": "https://ar5iv.labs.arxiv.org/html/1308.1342",
+          "publisher": "arXiv (Klotz)",
+          "supports": "Peak speed at the center is 'near 8 km/s' (uniform model)."
+        },
+        {
+          "url": "https://www.livescience.com/50312-how-long-to-fall-through-earth.html",
+          "publisher": "Live Science",
+          "supports": "Klotz quoted saying 'over 8 kilometers per second (17,895 mph)'. The 17,900 mph figure is Live Science's conversion, not a number from the paper."
+        },
+        {
+          "url": "https://www.uu.edu/blog/2003/if-a-hole-were-bored-through-the-earth-and-you-fell-into-the-hole-at-what-point-would-down-become-up/",
+          "publisher": "Union University (.edu)",
+          "supports": "About 17,700 mph at the center."
+        }
+      ]
+    },
+    {
+      "id": "f3",
+      "fact": "The net gravitational force at Earth's center is zero, because the surrounding mass pulls equally in all directions (treating Earth as spherically symmetric).",
+      "sources": [
+        {
+          "url": "https://www.wtamu.edu/~cbaird/sq/2013/10/04/what-would-happen-if-you-fell-into-a-hole-that-went-through-the-center-of-the-earth/",
+          "publisher": "West Texas A&M (.edu)",
+          "supports": "Gravity at the center is zero because equal amounts of matter pull equally in all directions."
+        },
+        {
+          "url": "https://van.physics.illinois.edu/ask/listing/27567",
+          "publisher": "University of Illinois Physics (.edu)",
+          "supports": "'At the exact center of the Earth, the gravitational field is actually zero.'"
+        },
+        {
+          "url": "https://www.uu.edu/blog/2003/if-a-hole-were-bored-through-the-earth-and-you-fell-into-the-hole-at-what-point-would-down-become-up/",
+          "publisher": "Union University (.edu)",
+          "supports": "Also says the pull is zero at the center."
+        }
+      ]
+    },
+    {
+      "id": "f4",
+      "fact": "With no air resistance, the faller slows after passing the center and comes to rest at the far surface (the motion is an oscillation).",
+      "sources": [
+        {
+          "url": "https://www.wtamu.edu/~cbaird/sq/2013/10/04/what-would-happen-if-you-fell-into-a-hole-that-went-through-the-center-of-the-earth/",
+          "publisher": "West Texas A&M (.edu)",
+          "supports": "You are 'slowed down to zero speed just as you emerge from the hole on the other side.'"
+        },
+        {
+          "url": "https://www.uu.edu/blog/2003/if-a-hole-were-bored-through-the-earth-and-you-fell-into-the-hole-at-what-point-would-down-become-up/",
+          "publisher": "Union University (.edu)",
+          "supports": "You slow down for about 21 minutes after the center and come to rest at the surface."
+        }
+      ]
+    },
+    {
+      "id": "f5",
+      "fact": "Any straight, frictionless, airless tunnel between two surface points (a 'gravity train'), traveled under gravity alone, takes about the same time: about 42 minutes in the uniform-density model, and roughly 38 to 42 minutes with Earth's realistic density (Klotz 2015), so 'around 40 minutes' is a fair summary; this includes a tunnel between New York and London.",
+      "sources": [
+        {
+          "url": "https://pubs.aip.org/aapt/ajp/article-abstract/83/3/231/1057885",
+          "publisher": "American Journal of Physics (Klotz)",
+          "supports": "Straight-line times are 'no longer independent of distance,' ranging from 42 down to 38 minutes."
+        },
+        {
+          "url": "https://arxiv.org/pdf/1308.1342",
+          "publisher": "arXiv (Klotz preprint)",
+          "supports": "Straight-line times are 'no longer independent of distance,' ranging from 42 down to 38 minutes."
+        },
+        {
+          "url": "https://phys.org/news/2015-11-dug-tunnel-earth.html",
+          "publisher": "Phys.org",
+          "supports": "'No matter which two points you connect, the journey will only take 42 minutes.'"
+        },
+        {
+          "url": "https://www.uh.edu/engines/epi2703.htm",
+          "publisher": "University of Houston, Engines of Our Ingenuity",
+          "supports": "Houston to Dallas and Houston to Paris both take about 42 minutes."
+        },
+        {
+          "url": "https://www.ucl.ac.uk/~zcapf71/The%20Gravity%20Express.pdf",
+          "publisher": "UCL (.ac.uk, student-authored essay)",
+          "supports": "Every journey takes about 42 minutes. This is the weakest source here."
+        }
+      ]
+    },
+    {
+      "id": "f6",
+      "fact": "With no air or friction, the faller would oscillate back and forth through the tunnel indefinitely.",
+      "sources": [
+        {
+          "url": "https://www.uu.edu/blog/2003/if-a-hole-were-bored-through-the-earth-and-you-fell-into-the-hole-at-what-point-would-down-become-up/",
+          "publisher": "Union University (.edu)",
+          "supports": "If you don't grab anything, you fall back in and repeat the trip over and over."
+        },
+        {
+          "url": "https://arxiv.org/pdf/1308.1342",
+          "publisher": "arXiv (Klotz preprint)",
+          "supports": "The swings take 84 minutes in the uniform model."
+        }
+      ]
+    },
+    {
+      "id": "f7",
+      "fact": "(TikTok bonus, inserted after b4) Earth's center is over 9,000 degrees Fahrenheit (estimates about 5,200 to 6,000 degrees Celsius, about 9,400 to 10,800 degrees Fahrenheit), roughly comparable to the Sun's visible surface (about 5,500 degrees Celsius, about 9,900 degrees Fahrenheit).",
+      "sources": [
+        {
+          "url": "https://www.livescience.com/29054-earth-core-hotter.html",
+          "publisher": "Live Science",
+          "supports": "6,000°C (about 10,800°F), 'as hot as the surface of the sun.'"
+        },
+        {
+          "url": "https://par.nsf.gov/servlets/purl/10673911",
+          "publisher": "NSF (.gov)",
+          "supports": "About 6,000°C at the inner-core boundary, close to the Sun's surface temperature."
+        },
+        {
+          "url": "https://science.nasa.gov/sun/facts/",
+          "publisher": "NASA",
+          "supports": "The Sun's surface is 10,000°F (5,500°C)."
+        },
+        {
+          "url": "https://scied.ucar.edu/learning-zone/sun-space-weather/surface-of-the-sun",
+          "publisher": "UCAR (.edu)",
+          "supports": "The Sun's surface is about 5,500°C (9,900°F)."
+        }
+      ]
+    },
+    {
+      "id": "f8",
+      "fact": "(TikTok bonus, inserted after b4) The deepest hole ever drilled, the Kola Superdeep Borehole in Russia, reached about 12.2 km (about 7.6 miles), which is less than 1/500 of the roughly 3,959-mile (6,371 km) mean distance to Earth's center (7.6 / 3,959 = about 1/520).",
+      "sources": [
+        {
+          "url": "https://science.howstuffworks.com/engineering/civil/kola-superdeep-borehole.htm",
+          "publisher": "HowStuffWorks",
+          "supports": "The world's deepest human-made hole, 12,262 m, or 7.6 mi (12.2 km)."
+        },
+        {
+          "url": "https://www.scientificamerican.com/article/how-deep-is-the-deepest-hole-in-the-world/",
+          "publisher": "Scientific American",
+          "supports": "The deepest hole ever dug, about 7.5 miles (12,262 m)."
+        },
+        {
+          "url": "https://science.nasa.gov/resource/solar-system-sizes/",
+          "publisher": "NASA",
+          "supports": "Earth's radius is 3,959 mi (6,371 km)."
+        },
+        {
+          "url": "https://www.livescience.com/50312-how-long-to-fall-through-earth.html",
+          "publisher": "Live Science",
+          "supports": "Klotz notes Kola is about 12 km, roughly 0.1% of the way through Earth."
+        }
+      ]
+    }
+  ],
+  "avoid": [
+    "You wouldn't fall forever (with no air you would oscillate forever)",
+    "You'd feel no pull only at the center (in free fall you feel weightless the whole trip)",
+    "Kola is the longest hole (some angled oil wells are longer; Kola is the deepest)"
+  ],
+  "notes": "Built from the pilot 01 fact check (2026-11-27). Example pack."
+}

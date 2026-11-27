@@ -1,12 +1,14 @@
 /**
  * Fact Checker agent.
- *   1. Research (Opus 5.5 + server-side web search): checks every claim, writes findings.
+ *   0. With a research pack (research-pack.ts), claims the pack covers are judged against it without search.
+ *   1. Research (Opus 5.5 + server-side web search): checks the remaining claims, writes findings.
  *   2. Structuring (Haiku 5.5): turns the findings into FactCheck JSON. Mechanical, and checked by 3.
  *   3. Code rules: a source only counts if web search actually returned that URL and the site is
  *      on the reputable list; "supported" needs 2 such sources, otherwise it is downgraded.
  */
 import type { Llm } from "./llm";
 import { type FactCheck, FactCheckSchema, type Script, TIKTOK_BONUS_ID } from "./schemas";
+import { checkAgainstPack, sourcesForFacts, type VerifiedPack } from "./research-pack";
 import { isReputable, normalizeUrl, TRUSTED_LIST_FOR_PROMPT } from "./sources";
 
 export const MIN_SOURCES = 2;
@@ -30,6 +32,8 @@ export type CheckedClaim = FactCheck["claims"][number] & {
   downgradedBecause?: string;
   /** True when the verdict was carried over from an earlier round because the claim did not change. */
   reused?: boolean;
+  /** True when the verdict came from the research pack rather than web search. */
+  fromPack?: boolean;
 };
 
 export type FactCheckResult = {
@@ -58,11 +62,21 @@ export function searchBudget(claimCount: number): number {
 /** A check of an earlier version of the script, so unchanged claims are not researched again. */
 export type PriorCheck = { script: Script; result: FactCheckResult };
 
+export type FactCheckOptions = {
+  prior?: PriorCheck;
+  /** Pre-researched facts. Claims the pack covers are judged without web search. */
+  pack?: VerifiedPack;
+};
+
 /**
- * Checks the script's claims. With a prior check, a claim that already passed and whose wording and
- * narration are unchanged keeps its verdict and sources; only new, changed or failed claims are researched.
+ * Checks the script's claims, cheapest first:
+ *   1. With a prior check, a claim that already passed and whose wording and narration are unchanged keeps
+ *      its verdict and sources.
+ *   2. With a research pack, claims the pack covers are judged against it (one Opus call, no web search).
+ *   3. Everything else gets web research.
  */
-export async function factCheck(llm: Llm, script: Script, prior?: PriorCheck): Promise<FactCheckResult> {
+export async function factCheck(llm: Llm, script: Script, opts: FactCheckOptions = {}): Promise<FactCheckResult> {
+  const { prior, pack } = opts;
   const reused = new Map<string, CheckedClaim>();
   if (prior) {
     const before = new Map(prior.script.claims.map((c) => [c.id, claimLine(prior.script, c)]));
@@ -71,23 +85,64 @@ export async function factCheck(llm: Llm, script: Script, prior?: PriorCheck): P
       if (c.verdict === "supported" && claim && before.get(c.claimId) === claimLine(script, claim)) reused.set(c.claimId, { ...c, reused: true });
     }
   }
-  const toCheck = script.claims.filter((c) => !reused.has(c.id));
-  if (toCheck.length === 0) {
-    const claims = script.claims.map((c) => reused.get(c.id) as CheckedClaim);
-    return { pass: true, claims, notes: prior?.result.notes ?? "", research: prior?.result.research ?? "" };
+  let toCheck = script.claims.filter((c) => !reused.has(c.id));
+  const done = new Map<string, CheckedClaim>(reused);
+  const notes: string[] = [];
+  const research: string[] = [];
+
+  if (pack && toCheck.length) {
+    const pc = await checkAgainstPack(llm, script, claimsForPrompt(script, toCheck), pack);
+    for (const c of pc.claims) {
+      if (c.coverage !== "covered" || !toCheck.some((x) => x.id === c.claimId)) continue;
+      const sources = sourcesForFacts(pack, c.factIds);
+      const out: CheckedClaim = {
+        claimId: c.claimId,
+        verdict: c.verdict,
+        explanation: c.explanation,
+        suggestedRewrite: c.suggestedRewrite,
+        sources,
+        acceptedSources: sources,
+        fromPack: true,
+      };
+      if (c.verdict === "supported" && sources.length < MIN_SOURCES) {
+        out.verdict = "needs_rewrite";
+        out.downgradedBecause = `The pack facts it relies on have only ${sources.length} working reputable source site(s); need ${MIN_SOURCES}.`;
+      }
+      done.set(c.claimId, out);
+    }
+    if (pc.notes.trim()) notes.push(pc.notes.trim());
+    toCheck = toCheck.filter((c) => !done.has(c.id));
   }
 
+  if (toCheck.length) {
+    const web = await webCheck(llm, script, toCheck);
+    for (const c of web.claims) done.set(c.claimId, c);
+    if (web.notes.trim()) notes.push(web.notes.trim());
+    research.push(web.research);
+  }
+  // Nothing was re-checked: every verdict came from the prior round, so its notes still apply.
+  if (prior && reused.size === script.claims.length) {
+    notes.push(prior.result.notes);
+    research.push(prior.result.research);
+  }
+
+  const claims = script.claims.map((c) => done.get(c.id) as CheckedClaim);
+  return { pass: claims.every((c) => c.verdict === "supported"), claims, notes: notes.filter(Boolean).join("\n"), research: research.join("\n\n") };
+}
+
+/** Web research (Opus + web search), structuring (Haiku), then the code rules, for the given claims only. */
+async function webCheck(llm: Llm, script: Script, claims: Script["claims"]): Promise<FactCheckResult> {
   const research = await llm.research({
     step: "fact-check-research",
     system: RESEARCH_SYSTEM,
     effort: "high",
-    maxSearches: searchBudget(toCheck.length),
+    maxSearches: searchBudget(claims.length),
     user: [
       `Script title: ${script.title}`,
       `Full narration: ${script.beats.map((b) => b.narration).join(" ")}`,
       ``,
       `Claims to check:`,
-      claimsForPrompt(script, toCheck),
+      claimsForPrompt(script, claims),
     ].join("\n"),
   });
 
@@ -96,14 +151,11 @@ export async function factCheck(llm: Llm, script: Script, prior?: PriorCheck): P
     model: "haiku",
     effort: "low",
     system: STRUCTURE_SYSTEM,
-    user: `Claim ids: ${toCheck.map((c) => c.id).join(", ")}\n\n## Findings\n${research.text}`,
+    user: `Claim ids: ${claims.map((c) => c.id).join(", ")}\n\n## Findings\n${research.text}`,
     schema: FactCheckSchema,
   });
 
-  const fresh = applyRules({ ...script, claims: toCheck }, structured, research.retrievedUrls.concat(research.citedUrls), research.text);
-  const byId = new Map(fresh.claims.map((c) => [c.claimId, c]));
-  const claims = script.claims.map((c) => reused.get(c.id) ?? (byId.get(c.id) as CheckedClaim));
-  return { pass: claims.every((c) => c.verdict === "supported"), claims, notes: fresh.notes, research: research.text };
+  return applyRules({ ...script, claims }, structured, research.retrievedUrls.concat(research.citedUrls), research.text);
 }
 
 /** The code half of the fact check. Exported for tests. */

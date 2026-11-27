@@ -5,6 +5,8 @@
  *   npm run script:new -- --topic "What if you fell through the Earth?" --series "WHAT IF?" [--notes "..."]
  *   npm run script:check -- --script scripts/pilot-01-hole-through-earth.json   # fact-check an existing script
  *
+ *   npm run script:new -- --research research/<slug>.json            # write from a research pack (topic and series come from it)
+ *
  * Fact-check research goes through the Message Batches API (half-price tokens; each research round can
  * take from a few minutes up to 24 h). Add --now to skip batching and pay full price for an immediate answer.
  *
@@ -28,6 +30,7 @@ import {
   validateScript,
   wordCount,
 } from "../agents/schemas";
+import { loadPack, packForWriter, packProblems, usableFacts, type VerifiedPack } from "../agents/research-pack";
 import { reviseScript, writeValidScript } from "../agents/script-writer";
 
 export const MAX_FACT_ROUNDS = 2;
@@ -44,6 +47,7 @@ export type StageResult = {
 export async function runScriptStage(
   llm: Llm,
   input: { brief: { topic: string; series: Series; notes?: string } } | { script: Script },
+  pack?: VerifiedPack,
 ): Promise<StageResult> {
   let script: Script;
   let problems: string[];
@@ -51,17 +55,18 @@ export async function runScriptStage(
     script = input.script;
     problems = validateScript(script);
   } else {
-    ({ script, problems } = await writeValidScript(llm, input.brief));
+    const notes = [input.brief.notes, pack ? packForWriter(pack) : ""].filter(Boolean).join("\n\n");
+    ({ script, problems } = await writeValidScript(llm, { ...input.brief, notes: notes || undefined }));
   }
 
-  let check = await factCheck(llm, script);
+  let check = await factCheck(llm, script, { pack });
   let rounds = 0;
   while ((!check.pass || problems.length) && rounds < MAX_FACT_ROUNDS) {
     rounds++;
     const prior = { script, result: check };
     script = await reviseScript(llm, script, [...feedbackFrom(check), ...problems]);
     problems = validateScript(script);
-    check = await factCheck(llm, script, prior);
+    check = await factCheck(llm, script, { prior, pack });
   }
 
   const spoken = check.pass && problems.length === 0 ? await prepareNarration(llm, script) : null;
@@ -87,7 +92,7 @@ export function reviewMarkdown(r: StageResult, costUsd: number): string {
     ...r.check.claims.map((c) => {
       const claim = s.claims.find((x) => x.id === c.claimId);
       const src = c.acceptedSources.map((x) => `[${x.publisher}](${x.url})`).join(", ") || "none accepted";
-      return `- ${icon[c.verdict]} **${c.claimId}**${c.reused ? " _(unchanged, verdict from an earlier round)_" : ""} ${claim?.claim ?? ""}\n  ${c.downgradedBecause ?? c.explanation}${c.suggestedRewrite ? `\n  Suggested: "${c.suggestedRewrite}"` : ""}\n  Sources: ${src}`;
+      return `- ${icon[c.verdict]} **${c.claimId}**${c.reused ? " _(unchanged, verdict from an earlier round)_" : ""}${c.fromPack ? " _(checked against the research pack)_" : ""} ${claim?.claim ?? ""}\n  ${c.downgradedBecause ?? c.explanation}${c.suggestedRewrite ? `\n  Suggested: "${c.suggestedRewrite}"` : ""}\n  Sources: ${src}`;
     }),
     r.check.notes ? `\n**Checker notes:** ${r.check.notes}` : "",
     r.problems.length ? `\n## Open problems\n${r.problems.map((p) => `- ${p}`).join("\n")}` : "",
@@ -110,23 +115,33 @@ if (isMain) {
       series: { type: "string" },
       notes: { type: "string" },
       script: { type: "string" },
+      research: { type: "string" },
       // Skip the Message Batches API: full price, but results right away.
       now: { type: "boolean", default: false },
     },
   });
   const llm = new ClaudeLlm(undefined, undefined, { batch: !values.now });
+  let pack: VerifiedPack | undefined;
+  if (values.research) {
+    pack = await loadPack(values.research);
+    const problems = packProblems(pack);
+    console.error(`Research pack: ${usableFacts(pack).length} of ${pack.facts.length} facts usable.${problems.map((p) => `\n- ${p}`).join("")}`);
+  }
+
   let input: Parameters<typeof runScriptStage>[1];
   if (values.script) {
     input = { script: ScriptSchema.parse(JSON.parse(await readFile(values.script, "utf8"))) };
   } else {
-    if (!values.topic || !SERIES.includes(values.series as Series)) {
-      console.error(`Usage: --topic "<topic>" --series "<${SERIES.join(" | ")}>" [--notes "..."]  or  --script <file.json>`);
+    // A research pack can supply the topic and series.
+    const topic = values.topic ?? pack?.topic;
+    const series = values.series ?? pack?.series;
+    if (!topic || !SERIES.includes(series as Series)) {
+      console.error(`Usage: --topic "<topic>" --series "<${SERIES.join(" | ")}>" [--notes "..."] [--research <pack.json>]  or  --script <file.json> [--research <pack.json>]`);
       process.exit(1);
     }
-    input = { brief: { topic: values.topic, series: values.series as Series, notes: values.notes } };
+    input = { brief: { topic, series: series as Series, notes: values.notes } };
   }
-
-  const result = await runScriptStage(llm, input);
+  const result = await runScriptStage(llm, input, pack);
   const dir = join("out/scripts", result.script.slug);
   await mkdir(dir, { recursive: true });
   await writeFile(join(dir, "script.json"), JSON.stringify(result.script, null, 2));
