@@ -29,8 +29,9 @@ export async function writeScript(llm: Llm, brief: ScriptBrief): Promise<Script>
 
 export async function reviseScript(llm: Llm, script: Script, feedback: string[]): Promise<Script> {
   const user = [
-    `Revise this Wonderscraps script. Fix every point below; keep everything else that works (especially the hook) unless a point requires changing it.`,
-    `Keep the claims list in sync with the narration.`,
+    `Revise this Wonderscraps script. Make the smallest edit that fixes each point below.`,
+    `Every beat, card and claim that no point is about must stay WORD FOR WORD the same: each changed line sends its claims back to paid web research. Use a suggested line when one is given. Do not polish, reword or reorder anything else.`,
+    `Keep claim ids stable. Only change a claim's text when its narration changed, and keep the claims list in sync with the narration.`,
     ``,
     `## Feedback`,
     ...feedback.map((f) => `- ${f}`),

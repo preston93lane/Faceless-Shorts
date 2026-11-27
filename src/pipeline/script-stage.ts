@@ -4,6 +4,7 @@
  *
  *   npm run script:new -- --topic "What if you fell through the Earth?" --series "WHAT IF?" [--notes "..."]
  *   npm run script:check -- --script scripts/pilot-01-hole-through-earth.json   # fact-check an existing script
+ *   npm run script:check -- --script edited.json --prior out/scripts/<slug>       # re-check only what changed since that run
  *
  *   npm run script:new -- --research research/<slug>.json            # write from a research pack (topic and series come from it)
  *
@@ -15,7 +16,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { factCheck, type FactCheckResult, feedbackFrom, sourcesForDescription } from "../agents/fact-checker";
+import { factCheck, type FactCheckResult, feedbackFrom, type PriorCheck, sourcesForDescription } from "../agents/fact-checker";
 import { ClaudeLlm, type Llm } from "../agents/llm";
 import { prepareNarration } from "../agents/narration-prep";
 import {
@@ -48,6 +49,7 @@ export async function runScriptStage(
   llm: Llm,
   input: { brief: { topic: string; series: Series; notes?: string } } | { script: Script },
   pack?: VerifiedPack,
+  prior?: PriorCheck,
 ): Promise<StageResult> {
   let script: Script;
   let problems: string[];
@@ -59,7 +61,7 @@ export async function runScriptStage(
     ({ script, problems } = await writeValidScript(llm, { ...input.brief, notes: notes || undefined }));
   }
 
-  let check = await factCheck(llm, script, { pack });
+  let check = await factCheck(llm, script, { pack, prior });
   let rounds = 0;
   while ((!check.pass || problems.length) && rounds < MAX_FACT_ROUNDS) {
     rounds++;
@@ -116,6 +118,8 @@ if (isMain) {
       notes: { type: "string" },
       script: { type: "string" },
       research: { type: "string" },
+      // A previous run's folder (out/scripts/<slug>): claims that passed there and are unchanged keep their verdict.
+      prior: { type: "string" },
       // Skip the Message Batches API: full price, but results right away.
       now: { type: "boolean", default: false },
     },
@@ -141,7 +145,14 @@ if (isMain) {
     }
     input = { brief: { topic, series: series as Series, notes: values.notes } };
   }
-  const result = await runScriptStage(llm, input, pack);
+  let prior: PriorCheck | undefined;
+  if (values.prior) {
+    prior = {
+      script: ScriptSchema.parse(JSON.parse(await readFile(join(values.prior, "script.json"), "utf8"))),
+      result: JSON.parse(await readFile(join(values.prior, "factcheck.json"), "utf8")) as FactCheckResult,
+    };
+  }
+  const result = await runScriptStage(llm, input, pack, prior);
   const dir = join("out/scripts", result.script.slug);
   await mkdir(dir, { recursive: true });
   await writeFile(join(dir, "script.json"), JSON.stringify(result.script, null, 2));
