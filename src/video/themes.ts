@@ -44,6 +44,23 @@ export type Theme = {
   badge: { font: string; bg: string; fg: string };
   /** 1 = smooth motion every frame; 2 = "on twos" like stop-motion. */
   hold: number;
+  /** Motion intensity. Kept in one place so "calmer / livelier" is a single edit. */
+  motion: {
+    /** Max random rotation per jitter tick, degrees (paper stop-motion wobble). */
+    jitterDeg: number;
+    /** Max random offset per jitter tick, px. */
+    jitterPx: number;
+    /** Frames between jitter changes (higher = calmer). */
+    jitterEvery: number;
+    /** Overshoot of the entrance ease (1 = none, 1.6 = bouncy). */
+    overshoot: number;
+    /** Extra tilt while a piece slides in, degrees. */
+    slideTilt: number;
+    /** Camera push-in over a scene (1.04 = 4%). */
+    cameraZoom: number;
+    /** Tilt of caption cards / scene transitions, degrees. */
+    cardTilt: number;
+  };
 };
 
 export const THEMES: Record<ThemeId, Theme> = {
@@ -86,6 +103,7 @@ export const THEMES: Record<ThemeId, Theme> = {
     },
     badge: { font: "Montserrat", bg: "#FF4FA3", fg: "#FFFFFF" },
     hold: 1,
+    motion: { jitterDeg: 0, jitterPx: 0, jitterEvery: 1, overshoot: 1, slideTilt: 0, cameraZoom: 1.07, cardTilt: 0 },
   },
   paper: {
     id: "paper",
@@ -126,6 +144,9 @@ export const THEMES: Record<ThemeId, Theme> = {
     },
     badge: { font: "Lilita One", bg: "#FFCA3A", fg: "#1D2440" },
     hold: 2,
+    // Calm paper (owner feedback 2026-11-27: the first demo moved "a little too much, chaotic").
+    // Before: jitter ±0.8° / ±1.5px every 2 frames, overshoot 1.6, slide tilt 14°, zoom 1.07, card tilt 1.6°.
+    motion: { jitterDeg: 0.25, jitterPx: 0.5, jitterEvery: 6, overshoot: 1.15, slideTilt: 4, cameraZoom: 1.03, cardTilt: 0.6 },
   },
   chalk: {
     id: "chalk",
@@ -166,5 +187,6 @@ export const THEMES: Record<ThemeId, Theme> = {
     },
     badge: { font: "Gaegu", bg: "transparent", fg: "#FFE680" },
     hold: 1,
+    motion: { jitterDeg: 0, jitterPx: 0, jitterEvery: 1, overshoot: 1, slideTilt: 0, cameraZoom: 1.06, cardTilt: 0 },
   },
 };

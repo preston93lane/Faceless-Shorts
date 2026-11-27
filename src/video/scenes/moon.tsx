@@ -122,7 +122,7 @@ export const MoonVanish: React.FC<SceneProps> = ({ dur, props }) => {
   return (
     <>
       <Backdrop mood="night" />
-      <Camera durationInFrames={dur} to={1.08}>
+      <Camera durationInFrames={dur}>
         <Stars />
         <Thing at={0} from="down" x={540} y={980} seed="earth">
           <Earth r={280} spin={frame / 400} id="s1" />
@@ -198,7 +198,7 @@ export const DarkNight: React.FC<SceneProps> = ({ dur }) => {
   return (
     <>
       <Backdrop mood="night" darken={0} />
-      <Camera durationInFrames={dur} to={1.06}>
+      <Camera durationInFrames={dur}>
         <Stars brightness={1 + darken * 1.4} area={[120, 1000]} />
         {/* Where the Moon used to be */}
         <Thing at={2} x={780} y={380} seed="ghost">
@@ -246,7 +246,7 @@ export const Tides: React.FC<SceneProps> = ({ dur, props }) => {
   return (
     <>
       <Backdrop mood="day" />
-      <Camera durationInFrames={dur} to={1.05}>
+      <Camera durationInFrames={dur}>
         {/* Beach */}
         <Thing at={0} from="right" seed="sand">
           <path d="M 560 2000 L 760 900 Q 900 860 1180 880 L 1180 2000 Z" {...p("sand")} />
@@ -291,11 +291,11 @@ export const TiltWobble: React.FC<SceneProps> = ({ dur, props }) => {
   const t = useTheme();
   const wobbleAt = ms2f(Number(props?.wobbleAtMs ?? 2600), fps);
   const scrambleAt = ms2f(Number(props?.scrambleAtMs ?? 3900), fps);
-  const amp = interpolate(frame, [wobbleAt, wobbleAt + 40], [0, 26], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const tilt = 23.4 + amp * Math.sin((frame - wobbleAt) / 5);
+  const amp = interpolate(frame, [wobbleAt, wobbleAt + 40], [0, 18], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const tilt = 23.4 + amp * Math.sin((frame - wobbleAt) / 9);
   const scramble = interpolate(frame, [scrambleAt, scrambleAt + 24], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const orbit = (i: number) => {
-    const a = (i * Math.PI) + scramble * (frame / 6) + scramble * i;
+    const a = (i * Math.PI) + scramble * (frame / 14) + scramble * i;
     return { x: 540 + Math.cos(a) * 380, y: 720 + Math.sin(a) * 300 * (0.4 + 0.6 * scramble) };
   };
   const sunPos = orbit(0);
@@ -303,7 +303,7 @@ export const TiltWobble: React.FC<SceneProps> = ({ dur, props }) => {
   return (
     <>
       <Backdrop mood="night" />
-      <Camera durationInFrames={dur} to={1.06}>
+      <Camera durationInFrames={dur}>
         <Stars count={30} />
         <Thing at={0} x={540} y={720} seed="earth2">
           <g transform={`rotate(${tilt})`}>

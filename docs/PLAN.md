@@ -7,6 +7,8 @@ _Status: **approved 2026-11-27**, build starts with Phase 0/1. Research and sour
 - **Models:** Opus 5.5 for research, planning, writing and reviewing; Haiku 5.5 only for mechanical steps whose output is checked downstream. See [Model routing](#model-routing).
 - **Voice:** Kokoro (free, local) to start.
 - **Storage and review:** Dropbox instead of Google Drive.
+- **Brand:** the name is **Wonderscraps** (`@wonderscraps` on all four platforms), the style is **Paper Cutout** with calmer motion, and the voice is **Kokoro Michael**. See [BRAND.md](BRAND.md).
+- **Platforms:** YouTube, TikTok, Instagram Reels and Facebook Reels. Posting to Instagram through the API requires an Instagram professional account linked to a Facebook Page, plus a Meta developer app.
 
 ---
 
@@ -186,5 +188,5 @@ Already available here: `claude-api` (loaded for pricing and models), `dataviz` 
 
 Community plugins are third-party; please review them before installing.
 
-### Still open
-- **Channel name:** I'll make a shortlist in Phase 1 after checking handle availability on both platforms.
+### Resolved
+- **Channel name:** Wonderscraps. Its handles were confirmed free on YouTube and TikTok by automated check, and on Instagram by the owner on 2026-11-27.

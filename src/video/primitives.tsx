@@ -118,13 +118,13 @@ export const Thing: React.FC<{
     progress = spring({ frame: f, fps, config: { damping: 12, mass: 0.7, stiffness: 140 } });
     if (from === "pop") s = Math.max(progress, 0);
   } else {
-    progress = interpolate(f, [0, 10], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(1.6)) });
+    progress = interpolate(f, [0, 10], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(t.motion.overshoot)) });
     if (from === "pop") s = Math.max(progress, 0);
     // stop-motion jitter, changes every held frame
-    const tick = Math.floor(rawFrame / t.hold);
-    r = (random(`${seed}-r-${tick}`) - 0.5) * 1.6;
-    dx = (random(`${seed}-x-${tick}`) - 0.5) * 3;
-    dy = (random(`${seed}-y-${tick}`) - 0.5) * 3;
+    const tick = Math.floor(rawFrame / t.motion.jitterEvery);
+    r = (random(`${seed}-r-${tick}`) - 0.5) * 2 * t.motion.jitterDeg;
+    dx = (random(`${seed}-x-${tick}`) - 0.5) * 2 * t.motion.jitterPx;
+    dy = (random(`${seed}-y-${tick}`) - 0.5) * 2 * t.motion.jitterPx;
   }
 
   if (t.id !== "chalk") {
@@ -134,7 +134,7 @@ export const Thing: React.FC<{
     if (from === "right") dx += dist * inv;
     if (from === "up") dy -= dist * inv;
     if (from === "down") dy += dist * inv;
-    if (from !== "pop" && from !== "none" && t.id === "paper") r += inv * 14;
+    if (from !== "pop" && from !== "none") r += inv * t.motion.slideTilt;
   }
 
   const visible = t.id === "chalk" ? f >= 0 : progress > 0.001 || from === "none";
@@ -224,14 +224,15 @@ export const PaperGrain: React.FC = () => {
 };
 
 /** Slow push-in over the scene, for a sense of motion even on static moments. */
-export const Camera: React.FC<{ durationInFrames: number; from?: number; to?: number; children: React.ReactNode }> = ({
+export const Camera: React.FC<{ durationInFrames: number; from?: number; /** Defaults to the theme zoom. */ to?: number; children: React.ReactNode }> = ({
   durationInFrames,
   from = 1,
-  to = 1.07,
+  to,
   children,
 }) => {
   const frame = useStyledFrame();
-  const s = interpolate(frame, [0, durationInFrames], [from, to], { extrapolateRight: "clamp" });
+  const t = useTheme();
+  const s = interpolate(frame, [0, durationInFrames], [from, to ?? t.motion.cameraZoom], { extrapolateRight: "clamp" });
   return (
     <svg viewBox="0 0 1080 1920" width={1080} height={1920} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
       <g transform={`translate(540 760) scale(${s}) translate(-540 -760)`}>{children}</g>

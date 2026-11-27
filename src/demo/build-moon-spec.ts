@@ -6,9 +6,10 @@
  */
 import type { Caption } from "@remotion/captions";
 import { readFileSync, writeFileSync } from "node:fs";
+import { BRAND } from "../brand";
 import type { ThemeId, VideoSpec } from "../video/types";
 
-const voice = process.argv[2] ?? "af_heart";
+const voice = process.argv[2] ?? BRAND.voice.id;
 const dir = "public/generated/moon";
 const narration = JSON.parse(readFileSync(`${dir}/voice_${voice}.json`, "utf8")) as {
   durationMs: number;

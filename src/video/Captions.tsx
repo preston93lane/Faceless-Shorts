@@ -23,7 +23,7 @@ export const Captions: React.FC<{ captions: Caption[] }> = ({ captions }) => {
     t.id === "neon"
       ? 0.7 + 0.3 * spring({ frame: pageFrame, fps, config: { damping: 14, stiffness: 220 } })
       : t.id === "paper"
-        ? interpolate(held, [0, 4], [0.6, 1], { extrapolateRight: "clamp" })
+        ? interpolate(held, [0, 4], [0.85, 1], { extrapolateRight: "clamp" })
         : interpolate(pageFrame, [0, 5], [0, 1], { extrapolateRight: "clamp" });
 
   const isPaper = t.id === "paper";
@@ -42,7 +42,7 @@ export const Captions: React.FC<{ captions: Caption[] }> = ({ captions }) => {
           textTransform: t.caption.uppercase ? "uppercase" : "none",
           scale: t.id === "chalk" ? 1 : enter,
           opacity: t.id === "chalk" ? enter : 1,
-          rotate: isPaper ? `${((idx % 3) - 1) * 1.6}deg` : "0deg",
+          rotate: isPaper ? `${((idx % 3) - 1) * t.motion.cardTilt}deg` : "0deg",
           padding: isPaper ? "18px 36px 26px" : 0,
           background: isPaper ? t.colors.paperWhite : "transparent",
           boxShadow: isPaper ? "10px 14px 0 rgba(0,0,0,0.30)" : "none",

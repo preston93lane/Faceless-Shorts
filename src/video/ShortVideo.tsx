@@ -35,7 +35,7 @@ const SceneShell: React.FC<{ first: boolean; children: React.ReactNode }> = ({ f
       <AbsoluteFill
         style={{
           translate: `${(1 - p) * 1080}px 0px`,
-          rotate: `${(1 - p) * 4}deg`,
+          rotate: `${(1 - p) * t.motion.cardTilt * 2}deg`,
           boxShadow: "-24px 0 40px rgba(0,0,0,0.35)",
         }}
       >
