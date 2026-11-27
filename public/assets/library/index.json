@@ -65,10 +65,10 @@
   },
   "protein-ribbon": {
     "key": "protein-ribbon",
-    "description": "A single long floppy ribbon in bright teal, loosely looping and curling in gentle waves with no fixed shape, soft rounded ends",
+    "description": "A single long, thin, floppy ribbon in bright teal, loosely wavy and curling in two or three gentle S-shaped loops. The ends are soft and rounded and do not cross each other in an X; the overall outline is an irregular, relaxed squiggle. Matte paper-cutout style with a white sticker border.",
     "file": "assets/library/protein-ribbon.png",
     "model": "fal-ai/flux/dev",
-    "seed": 185894105,
+    "seed": 808939109,
     "createdAt": "2026-11-27"
   },
   "rice-grain": {
@@ -121,10 +121,10 @@
   },
   "tardigrade-tun": {
     "key": "tardigrade-tun",
-    "description": "A compact, shrunken, wrinkled barrel shape seen from the side: a short plump pale beige oval, slightly wider in the middle and tapered at both ends. It has several deep horizontal creases around the body. No legs, no neck, no horns or antennae are visible; the head is fully tucked in and at most a tiny closed dot-eye sits at one end. The surface is matte and slightly dried, in paper-cutout style with a white sticker border.",
+    "description": "A compact, shrunken, wrinkled barrel seen from the side: a short plump pale beige oval, slightly wider in the middle and tapered at both ends. Several deep horizontal creases wrap around the body, and the surface looks matte and slightly dried with fine wrinkles. There are no legs, no antennae, no horns, no ears, no snout and no mouth; the head is fully tucked in, with at most one tiny dark dot at one end. Paper-cutout style with a white sticker border.",
     "file": "assets/library/tardigrade-tun.png",
     "model": "fal-ai/flux/dev",
-    "seed": 952275573,
+    "seed": 463034545,
     "createdAt": "2026-11-27"
   }
 }

@@ -15,6 +15,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { ClaudeLlm } from "../agents/llm";
+import { checkImage } from "../agents/image-check";
 import { qaMarkdown, type QaReport, runQa } from "../agents/qa";
 import { loadPack } from "../agents/research-pack";
 import { type Script, ScriptSchema, type Series, type Spoken, SpokenSchema } from "../agents/schemas";
@@ -89,18 +90,19 @@ export async function makeShort(llm: ClaudeLlm, script: Script, spoken: Spoken, 
     await writeFile(sbPath, JSON.stringify(storyboard, null, 2));
   }
 
-  // 3. Illustrations: library first, then fal.ai.
+  // 3. Illustrations: library first, then fal.ai; each new picture is checked before use.
+  const imageOpts = { ledger: llm.ledger, log, verify: (png: Buffer, s: { key: string; description: string }) => checkImage(llm, png, s) };
   const before = new Set(Object.keys(await loadLibrary()));
   const images = new Map<string, LibraryEntry | null>();
-  for (const im of storyboard.images) images.set(im.key, await getImage(im, { ledger: llm.ledger, log }));
+  for (const im of storyboard.images) images.set(im.key, await getImage(im, imageOpts));
   const newImages = () => storyboard.images.filter((im) => !before.has(im.key) && images.get(im.key)).map((im) => ({ key: im.key, description: im.description, file: images.get(im.key)!.file }));
 
   // 4. Render + QA, redrawing illustrations QA flags (at most maxQaRounds renders).
   const out = join(dir, `${slug}.mp4`);
   const music = pickMusic(history.length);
   let qa: QaReport | null = null;
-  // Up to two rounds of redraws (three renders) before a human looks at it.
-  const rounds = opts.maxQaRounds ?? 3;
+  // Pictures are checked one by one before rendering, so one round of redraws (two renders) is enough.
+  const rounds = opts.maxQaRounds ?? 2;
   for (let round = 1; round <= rounds; round++) {
     const spec = buildSpec({ id: slug, theme: BRAND.theme, script, spoken, storyboard, narration, captions, images, audio: `generated/${slug}/voice.wav`, music });
     await writeFile(join(dir, "spec.json"), JSON.stringify({ spec }, null, 2));
@@ -117,7 +119,7 @@ export async function makeShort(llm: ClaudeLlm, script: Script, spoken: Spoken, 
       im.description = r.betterDescription;
       await forgetImage(r.key);
       before.delete(r.key);
-      images.set(r.key, await getImage(im, { ledger: llm.ledger, log }));
+      images.set(r.key, await getImage(im, imageOpts));
     }
     await writeFile(sbPath, JSON.stringify(storyboard, null, 2));
   }

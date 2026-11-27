@@ -204,8 +204,8 @@ const Hero: React.FC<SceneProps> = ({ dur, props = {} }) => {
   const label = str(props.label);
   return (
     <Shot dur={dur} mood={moodOf(props)} seed={`hero-${label}`}>
-      <Piece seed="hero" x={540} y={label ? 700 : 760} at={0}>
-        <Cutout image={img(props.image)} size={760} />
+      <Piece seed="hero" x={540} y={label ? 730 : 760} at={0}>
+        <Cutout image={img(props.image)} size={700} />
       </Piece>
       {label && (
         <Piece seed="hero-label" x={540} y={1130} at={f(props.labelAtMs, fps)} from="up" rotate={-1.5}>
@@ -221,8 +221,8 @@ const Title: React.FC<SceneProps> = ({ dur, props = {} }) => {
   const fps = useFps();
   return (
     <Shot dur={dur} mood={moodOf(props, "night")} seed="title">
-      <Piece seed="title-img" x={540} y={620} at={0}>
-        <Cutout image={img(props.image)} size={620} />
+      <Piece seed="title-img" x={540} y={650} at={0}>
+        <Cutout image={img(props.image)} size={580} />
       </Piece>
       <Piece seed="title-card" x={540} y={1060} at={f(props.textAtMs, fps)} from="down" rotate={1.2}>
         <Card size={78} maxWidth={940}>
@@ -254,8 +254,8 @@ const BigNumber: React.FC<SceneProps> = ({ dur, props = {} }) => {
   return (
     <Shot dur={dur} mood={moodOf(props, "warm")} seed="num">
       {icon && (
-        <Piece seed="num-icon" x={540} y={520} at={0}>
-          <Cutout image={icon} size={440} />
+        <Piece seed="num-icon" x={540} y={560} at={0}>
+          <Cutout image={icon} size={400} />
         </Piece>
       )}
       <Piece seed="num-value" x={540} y={icon ? 880 : 720} at={Math.max(0, start - 4)}>
@@ -351,8 +351,8 @@ const List: React.FC<SceneProps> = ({ dur, props = {} }) => {
   return (
     <Shot dur={dur} mood={moodOf(props, "lilac")} seed="list">
       {icon && (
-        <Piece seed="list-icon" x={540} y={460} at={0}>
-          <Cutout image={icon} size={300} />
+        <Piece seed="list-icon" x={540} y={480} at={0}>
+          <Cutout image={icon} size={280} />
         </Piece>
       )}
       {heading && !icon && (
@@ -466,8 +466,8 @@ const Fact: React.FC<SceneProps> = ({ dur, props = {} }) => {
   return (
     <Shot dur={dur} mood={moodOf(props, "coral")} seed="fact">
       {icon && (
-        <Piece seed="fact-icon" x={540} y={500} at={0}>
-          <Cutout image={icon} size={420} />
+        <Piece seed="fact-icon" x={540} y={550} at={0}>
+          <Cutout image={icon} size={400} />
         </Piece>
       )}
       <Piece seed="fact-card" x={540} y={icon ? 920 : 760} at={f(props.textAtMs, fps)} from="down" rotate={-1}>

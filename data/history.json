@@ -17,5 +17,25 @@
       "big-number",
       "hero"
     ]
+  },
+  {
+    "id": "tardigrades-turn-to-glass",
+    "title": "Do Tardigrades Survive Drying Out by Turning to Glass?",
+    "series": "WILD BIOLOGY",
+    "date": "2026-11-27",
+    "templates": [
+      "title",
+      "fact",
+      "big-number",
+      "arrows",
+      "fact",
+      "compare",
+      "hero",
+      "fact",
+      "list",
+      "hero",
+      "progress",
+      "hero"
+    ]
   }
 ]

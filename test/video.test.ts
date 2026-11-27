@@ -127,3 +127,31 @@ describe("assets and Dropbox", () => {
     expect(reviewPath("a.mp4")).toBe("/Wonderscraps/01 Review/a.mp4");
   });
 });
+
+describe("image generation with a check", () => {
+  it("regenerates a rejected picture from the checker's better description, then saves it", async () => {
+    const { getImage, forgetImage } = await import("../src/assets/images");
+    const { existsSync, rmSync } = await import("node:fs");
+    const sharp = (await import("sharp")).default;
+    const png = await sharp({ create: { width: 64, height: 64, channels: 4, background: { r: 200, g: 50, b: 50, alpha: 1 } } }).png().toBuffer();
+    const uri = `data:image/png;base64,${png.toString("base64")}`;
+    const prompts: string[] = [];
+    const call = async (model: string, input: Record<string, unknown>) => {
+      if (model.includes("flux")) prompts.push(String(input.prompt));
+      return model.includes("flux") ? { images: [{ url: uri }] } : { image: { url: uri } };
+    };
+    let checks = 0;
+    const verify = async () => (++checks === 1 ? { ok: false, problems: ["has a tail"], betterDescription: "a tailless barrel" } : { ok: true });
+    const key = "zz-test-subject";
+    try {
+      const e = await getImage({ key, description: "a barrel with a tail" }, { call, verify, log: () => {} });
+      expect(prompts).toHaveLength(2);
+      expect(prompts[1]).toMatch(/^a tailless barrel\./);
+      expect(e?.description).toBe("a tailless barrel");
+      expect(existsSync(`public/${e?.file}`)).toBe(true);
+    } finally {
+      await forgetImage(key);
+      rmSync(`public/assets/library/${key}.png`, { force: true });
+    }
+  });
+});

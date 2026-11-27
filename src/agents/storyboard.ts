@@ -23,7 +23,7 @@ const ShotSchema = z.object({
   image2: z.string().nullable().describe("Second image key: compare (right side) and scale (the small subject). Else null."),
   imageLabel: z.string().nullable().describe("2-4 word label for the main image (compare/scale cards). Else null."),
   image2Label: z.string().nullable(),
-  text: z.string().nullable().describe("title: the hook question. fact: the fact (max 12 words). hero: the label card (max 7 words). big-number: the unit line (max 6 words). count: the label. Else null."),
+  text: z.string().nullable().describe("title: the hook question. fact: the fact (max 12 words). hero: the label card (max 7 words). big-number: the unit line (max 6 words). count: the label. compare: the 1-2 word chip between the two subjects that says how they relate ('vs' only for a contest; else e.g. 'uses', 'makes', 'becomes', '+'). Else null."),
   number: z
     .object({ value: z.number(), decimals: z.number().int(), prefix: z.string(), suffix: z.string() })
     .nullable()

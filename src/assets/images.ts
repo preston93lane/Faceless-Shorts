@@ -70,7 +70,15 @@ function dataUriBytes(uri: string): Buffer {
  */
 export async function getImage(
   subject: { key: string; description: string },
-  opts: { call?: FalCall; ledger?: CostLedger; log?: (l: string) => void; seed?: number } = {},
+  opts: {
+    call?: FalCall;
+    ledger?: CostLedger;
+    log?: (l: string) => void;
+    seed?: number;
+    /** Checks a new picture; a rejection is regenerated from the suggested description (up to `attempts` tries). */
+    verify?: (png: Buffer, subject: { key: string; description: string }) => Promise<{ ok: boolean; betterDescription?: string; problems?: string[] }>;
+    attempts?: number;
+  } = {},
 ): Promise<LibraryEntry | null> {
   const call = opts.call ?? falCall;
   const log = opts.log ?? ((l: string) => console.error(l));
@@ -78,41 +86,69 @@ export async function getImage(
   const lib = await loadLibrary();
   if (lib[key] && existsSync(join("public", lib[key].file))) return lib[key];
 
-  const seed = opts.seed ?? Math.floor(Math.random() * 1e9);
+  let description = subject.description;
+  const attempts = opts.verify ? (opts.attempts ?? 3) : 1;
   try {
-    const gen = (await call(IMAGE_MODEL, {
-      prompt: `${subject.description.replace(/\.$/, "")}. ${IMAGE_STYLE}`,
-      image_size: "square_hd",
-      num_inference_steps: 28,
-      num_images: 1,
-      seed,
-      sync_mode: true,
-      output_format: "png",
-      enable_safety_checker: true,
-    })) as { images: { url: string }[] };
-    const raw = dataUriBytes(gen.images[0].url);
-    const cut = (await call(BG_MODEL, {
-      image_url: `data:image/png;base64,${raw.toString("base64")}`,
-      sync_mode: true,
-      output_format: "png",
-    })) as { image: { url: string } };
-    opts.ledger?.add({ step: `image:${key}`, model: IMAGE_MODEL, inputTokens: 0, outputTokens: 0, webSearches: 0, usd: IMAGE_PRICE.generate + IMAGE_PRICE.cutout });
-
-    // Trim the transparent margin so templates can size the subject itself, and keep files small.
-    const png = await sharp(dataUriBytes(cut.image.url)).trim({ threshold: 1 }).resize(900, 900, { fit: "inside", withoutEnlargement: true }).png({ compressionLevel: 9, palette: true, quality: 90 }).toBuffer();
-    await mkdir(LIBRARY_DIR, { recursive: true });
-    const file = `assets/library/${key}.png`;
-    await writeFile(join("public", file), png);
-    const entry: LibraryEntry = { key, description: subject.description, file, model: IMAGE_MODEL, seed, createdAt: new Date().toISOString().slice(0, 10) };
-    const fresh = await loadLibrary();
-    fresh[key] = entry;
-    await writeFile(INDEX, `${JSON.stringify(sortKeys(fresh), null, 2)}\n`);
-    log(`image: generated ${key}`);
-    return entry;
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+      const seed = opts.seed ?? Math.floor(Math.random() * 1e9);
+      const png = await generateCutout(call, description, seed);
+      opts.ledger?.add({ step: `image:${key}`, model: IMAGE_MODEL, inputTokens: 0, outputTokens: 0, webSearches: 0, usd: IMAGE_PRICE.generate + IMAGE_PRICE.cutout });
+      if (opts.verify && attempt < attempts) {
+        const v = await opts.verify(png, { key, description });
+        if (!v.ok) {
+          log(`image: ${key} rejected (${(v.problems ?? []).join("; ")}); retrying`);
+          if (v.betterDescription) description = v.betterDescription;
+          continue;
+        }
+      }
+      return await saveEntry(key, description, png, seed, log);
+    }
+    return null;
   } catch (e) {
     log(`image: ${key} failed (${e instanceof Error ? e.message : String(e)}); the shot uses a drawn placeholder`);
     return null;
   }
+}
+
+/** Generates one picture, cuts it out and trims it. */
+async function generateCutout(call: FalCall, description: string, seed: number): Promise<Buffer> {
+  const gen = (await call(IMAGE_MODEL, {
+    prompt: `${description.replace(/\.$/, "")}. ${IMAGE_STYLE}`,
+    image_size: "square_hd",
+    num_inference_steps: 28,
+    num_images: 1,
+    seed,
+    sync_mode: true,
+    output_format: "png",
+    enable_safety_checker: true,
+  })) as { images: { url: string }[] };
+  const raw = dataUriBytes(gen.images[0].url);
+  const cut = (await call(BG_MODEL, {
+    image_url: `data:image/png;base64,${raw.toString("base64")}`,
+    sync_mode: true,
+    output_format: "png",
+  })) as { image: { url: string } };
+  // Trim the transparent margin so templates can size the subject itself, and keep files small.
+  return sharp(dataUriBytes(cut.image.url)).trim({ threshold: 1 }).resize(900, 900, { fit: "inside", withoutEnlargement: true }).png({ compressionLevel: 9, palette: true, quality: 90 }).toBuffer();
+}
+
+/** Library writes are serialized so parallel generations never drop each other's index entries. */
+let indexLock: Promise<unknown> = Promise.resolve();
+
+async function saveEntry(key: string, description: string, png: Buffer, seed: number, log: (l: string) => void): Promise<LibraryEntry> {
+  await mkdir(LIBRARY_DIR, { recursive: true });
+  const file = `assets/library/${key}.png`;
+  await writeFile(join("public", file), png);
+  const entry: LibraryEntry = { key, description, file, model: IMAGE_MODEL, seed, createdAt: new Date().toISOString().slice(0, 10) };
+  const write = indexLock.then(async () => {
+    const fresh = await loadLibrary();
+    fresh[key] = entry;
+    await writeFile(INDEX, `${JSON.stringify(sortKeys(fresh), null, 2)}\n`);
+  });
+  indexLock = write.catch(() => undefined);
+  await write;
+  log(`image: generated ${key}`);
+  return entry;
 }
 
 /** Removes a library image so the next getImage regenerates it (used when QA rejects a picture). */

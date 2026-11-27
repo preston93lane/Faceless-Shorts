@@ -96,7 +96,7 @@ export function buildSpec(opts: {
         };
         break;
       case "compare":
-        props = { ...base, left: ref(s.image, s.imageLabel), right: ref(s.image2, s.image2Label), rightAtMs: cue(s.cueWord, 0.35), layout: s.layout ?? "side" };
+        props = { ...base, left: ref(s.image, s.imageLabel), right: ref(s.image2, s.image2Label), rightAtMs: cue(s.cueWord, 0.35), layout: s.layout ?? "side", joiner: s.text ?? "vs" };
         break;
       case "scale":
         props = { ...base, big: ref(s.image, s.imageLabel), small: ref(s.image2, s.image2Label), smallAtMs: c1, ratio: s.ratio ?? "", ratioAtMs: Math.max(c2, c1 + 600), smallSize: 90 };
