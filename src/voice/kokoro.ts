@@ -7,9 +7,12 @@
  * Writes the WAV file plus a sidecar `<out>.json` with per-sentence timings.
  * Word-level timings come later from whisper alignment (src/voice/align.ts).
  */
+import { Tensor } from "@huggingface/transformers";
 import { KokoroTTS } from "kokoro-js";
+import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 import { parseArgs } from "node:util";
 
 const MODEL_ID = "onnx-community/Kokoro-82M-v1.0-ONNX";
@@ -26,8 +29,70 @@ export type NarrationResult = {
 let ttsPromise: Promise<KokoroTTS> | null = null;
 
 function loadTts(): Promise<KokoroTTS> {
-  ttsPromise ??= KokoroTTS.from_pretrained(MODEL_ID, { dtype: "q8", device: "cpu" });
+  ttsPromise ??= KokoroTTS.from_pretrained(MODEL_ID, { dtype: "q8", device: "cpu" }).then(enableBlends);
   return ttsPromise;
+}
+
+// ---------------------------------------------------------------------------
+// Voice blends: "am_michael:0.7+am_puck:0.3"
+// A Kokoro voice is a table of style vectors, so a weighted average of two voices is a
+// new, stable voice. kokoro-js only accepts its built-in names, so blends are handled by
+// wrapping two of its methods: voice validation and the style lookup before inference.
+// ---------------------------------------------------------------------------
+
+export type BlendPart = { voice: string; weight: number };
+
+/** Parses "am_michael:0.7+am_puck:0.3" into normalized weights. Plain names return one part. */
+export function parseVoiceSpec(spec: string): BlendPart[] {
+  const parts = spec.split("+").map((p) => {
+    const [voice, w] = p.trim().split(":");
+    const weight = w === undefined ? 1 : Number(w);
+    if (!/^[a-z]{2}_[a-z]+$/.test(voice) || !(weight > 0)) throw new Error(`Bad voice spec part: "${p}"`);
+    return { voice, weight };
+  });
+  const total = parts.reduce((a, p) => a + p.weight, 0);
+  return parts.map((p) => ({ voice: p.voice, weight: p.weight / total }));
+}
+
+const isBlend = (spec: string) => spec.includes("+") || spec.includes(":");
+const STYLE_DIM = 256;
+const voiceDir = () => join(dirname(createRequire(import.meta.url).resolve("kokoro-js")), "..", "voices");
+const blendCache = new Map<string, Float32Array>();
+
+function blendStyles(spec: string): Float32Array {
+  const cached = blendCache.get(spec);
+  if (cached) return cached;
+  let out: Float32Array | null = null;
+  for (const { voice, weight } of parseVoiceSpec(spec)) {
+    const buf = readFileSync(join(voiceDir(), `${voice}.bin`));
+    const v = new Float32Array(buf.buffer, buf.byteOffset, buf.byteLength / 4);
+    out ??= new Float32Array(v.length);
+    for (let i = 0; i < v.length; i++) out[i] += v[i] * weight;
+  }
+  blendCache.set(spec, out!);
+  return out!;
+}
+
+function enableBlends(tts: KokoroTTS): KokoroTTS {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const t = tts as any;
+  const validate = t._validate_voice.bind(t);
+  const fromIds = t.generate_from_ids.bind(t);
+  t._validate_voice = (v: string) => (isBlend(v) ? parseVoiceSpec(v)[0].voice.at(0) : validate(v));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t.generate_from_ids = async (ids: any, opts: { voice: string; speed?: number }) => {
+    if (!isBlend(opts.voice)) return fromIds(ids, opts);
+    // Same style-row selection as kokoro-js: one 256-d row per input length.
+    const row = Math.min(Math.max(ids.dims.at(-1) - 2, 0), 509);
+    const style = blendStyles(opts.voice).slice(row * STYLE_DIM, (row + 1) * STYLE_DIM);
+    const { waveform } = await t.model({
+      input_ids: ids,
+      style: new Tensor("float32", style, [1, STYLE_DIM]),
+      speed: new Tensor("float32", [opts.speed ?? 1], [1]),
+    });
+    return { audio: waveform.data as Float32Array, sampling_rate: 24000 };
+  };
+  return tts;
 }
 
 /** Split narration into sentences so each can be synthesized and timed separately. */

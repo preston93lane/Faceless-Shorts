@@ -8,7 +8,10 @@
     "studio": "remotion studio src/video/index.ts",
     "render": "remotion render src/video/index.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "script:new": "NODE_USE_ENV_PROXY=1 tsx src/pipeline/script-stage.ts",
+    "script:check": "NODE_USE_ENV_PROXY=1 tsx src/pipeline/script-stage.ts",
+    "voice:samples": "NODE_USE_ENV_PROXY=1 tsx src/demo/voice-samples.ts"
   },
   "devDependencies": {
     "@types/node": "22.18.0",
@@ -18,6 +21,7 @@
     "vitest": "3.2.4"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.14.0",
     "@remotion/captions": "4.0.547",
     "@remotion/cli": "4.0.547",
     "@remotion/fonts": "4.0.547",
@@ -26,6 +30,7 @@
     "kokoro-js": "1.2.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "remotion": "4.0.547"
+    "remotion": "4.0.547",
+    "zod": "^4.6.7"
   }
 }

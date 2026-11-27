@@ -1,0 +1,120 @@
+{
+  "slug": "hole-through-earth",
+  "series": "WHAT IF?",
+  "title": "What If You Jumped Into a Hole Through the Earth?",
+  "beats": [
+    {
+      "id": "b1",
+      "role": "hook",
+      "narration": "What if you jumped into a hole that went straight through the Earth?",
+      "onScreenText": "Hole through Earth?",
+      "visual": "Paper Earth cut in half like a cake, a thin tunnel through the middle; a small paper figure steps to the edge of the hole at the top."
+    },
+    {
+      "id": "b2",
+      "role": "surprise",
+      "narration": "You wouldn't fall forever. In about 38 minutes, you'd pop out the other side!",
+      "onScreenText": "38 minutes!",
+      "visual": "A paper stopwatch card slides in beside the Earth and its hand sweeps to 38."
+    },
+    {
+      "id": "b3",
+      "role": "beat",
+      "narration": "Pretend there's no air and nothing can melt you. You'd speed up all the way down, to about 5 miles every second. That's across America in about 10 minutes!",
+      "onScreenText": "5 miles per second",
+      "visual": "The figure drops down the tunnel with speed lines; a speedometer card counts up; then a paper map of the USA with a dotted line racing across it."
+    },
+    {
+      "id": "b4",
+      "role": "beat",
+      "narration": "At the center, gravity hits zero. The whole planet pulls on you from every side, so it all cancels out!",
+      "onScreenText": "Zero gravity",
+      "visual": "The figure floats at the center while paper arrows point outward in every direction around it; only the arrows pulse."
+    },
+    {
+      "id": "b5",
+      "role": "beat",
+      "narration": "Then you'd shoot up the other side, slowing down, and stop right at the surface.",
+      "onScreenText": "Out the other side",
+      "visual": "The figure rises up the lower half of the tunnel and peeks out of the hole at the bottom of the Earth, upside down relative to the start."
+    },
+    {
+      "id": "b6",
+      "role": "crazy",
+      "narration": "Here's the crazy part. Slide down a straight tunnel between any two cities, like New York and London, and it takes about the same time. Around 40 minutes!",
+      "onScreenText": "Any two cities?!",
+      "visual": "A straight chord tunnel cuts under the ocean between two paper city pins; a tiny paper train slides along it while a stopwatch shows about 40."
+    },
+    {
+      "id": "b7",
+      "role": "loop",
+      "narration": "If nobody grabs you at the top, you'd fall right back in and do it all again.",
+      "onScreenText": "Again and again",
+      "visual": "The figure slips back into the hole; the camera eases back to the opening shot of the cut-open Earth."
+    }
+  ],
+  "tiktokBonus": {
+    "afterBeatId": "b4",
+    "narration": "Now, in real life this is impossible. Earth's center is over 5,000 degrees Celsius, about as hot as the surface of the Sun! And the deepest hole people have ever dug, in Russia, goes down only about 12 kilometers. That's less than one five-hundredth of the way to the center.",
+    "visual": "A paper thermometer next to a paper Sun, both glowing orange; then a tiny drill bit barely scratching the top of the cut-open Earth, with a zoomed-in label."
+  },
+  "claims": [
+    {
+      "id": "c1",
+      "beatId": "b2",
+      "claim": "Falling through a tunnel through the Earth's center (no air, non-rotating, realistic density) takes about 38 minutes to reach the far surface (Klotz 2015: 38 min 11 s; 42 min in the uniform-density model)."
+    },
+    {
+      "id": "c2",
+      "beatId": "b3",
+      "claim": "In that fall, peak speed at the center is about 8 km/s (about 5 miles per second); the uniform-density model gives 7.9 km/s and realistic density gives somewhat more."
+    },
+    {
+      "id": "c3",
+      "beatId": "b3",
+      "claim": "At about 8 km/s you would cross the contiguous United States (roughly 4,500 km coast to coast) in about 10 minutes."
+    },
+    {
+      "id": "c4",
+      "beatId": "b4",
+      "claim": "The net gravitational force at the Earth's center is zero, because the surrounding mass pulls equally in all directions."
+    },
+    {
+      "id": "c5",
+      "beatId": "b5",
+      "claim": "With no air resistance, the faller decelerates after the center and comes to rest exactly at the far surface (the motion is an oscillation)."
+    },
+    {
+      "id": "c6",
+      "beatId": "b6",
+      "claim": "Any straight frictionless tunnel between two surface points (a 'gravity train') takes about the same time, about 42 minutes in the uniform-density model and between roughly 38 and 42 minutes with realistic density."
+    },
+    {
+      "id": "c7",
+      "beatId": "b7",
+      "claim": "With no air or friction, the faller would oscillate back and forth through the tunnel indefinitely."
+    },
+    {
+      "id": "c8",
+      "beatId": "b4",
+      "claim": "Earth's inner core is over 5,000 degrees Celsius (estimates about 5,200 to 6,000), comparable to the surface of the Sun (about 5,500 degrees Celsius)."
+    },
+    {
+      "id": "c9",
+      "beatId": "b4",
+      "claim": "The deepest hole ever drilled, the Kola Superdeep Borehole in Russia, reached about 12.2 km, less than 1/500 of the 6,371 km distance to Earth's center."
+    }
+  ],
+  "description": "What would actually happen if you jumped into a tunnel straight through the Earth? The answer involves zero gravity, five miles per second, and a strange rule that works for any two cities on the planet.",
+  "tags": [
+    "what if",
+    "science",
+    "physics",
+    "gravity",
+    "earth",
+    "gravity train",
+    "curiosity",
+    "space and scale",
+    "wonderscraps"
+  ]
+}

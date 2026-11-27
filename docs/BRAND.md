@@ -45,7 +45,9 @@ Owner feedback on the first demo: it "moves a little too much… chaotic." From 
 - Captions show 2–4 words per card. The word being spoken turns red; the others stay ink-colored.
 
 ## Narration
-- **Kokoro "Michael" (`am_michael`)** at speed 1.08: deeper and authoritative. It's free and runs locally.
+- **Kokoro "Michael", blended 70/30 with "Puck"** (`am_michael:0.7+am_puck:0.3`) at speed 1.12. The owner asked for "a little more enthusiasm" on 2026-11-27. The blend keeps Michael's deep pitch (about 110 Hz) but adds about 8% more pitch movement, and it reads about 7% faster than the first demo. It's free and runs locally.
+- Comparison clips: `npm run voice:samples` writes A (old Michael @ 1.08), B (Michael @ 1.14), C (**chosen**, Puck blend @ 1.12), D (Fenrir blend @ 1.12) and E (C + 0.7 semitone pitch lift) to `public/generated/voice-samples/`.
+- Enthusiasm also comes from the writing: questions, about one exclamation per four sentences, and "here's the crazy part" moments (`src/agents/style-guide.ts`).
 - Upgrade path: an ElevenLabs custom voice if the channel takes off.
 
 ## Series
