@@ -78,7 +78,7 @@ The rule is conservative: **Opus 5.5** handles anything that involves research, 
 | Long-form outline and narration | |
 | Weekly analytics strategy report | |
 
-Estimated LLM cost is about **$1.00–1.50 per Short**. Almost all of it sits in the Opus steps, which is where quality matters. Fact-check research with web search is the largest single item: about $0.035 per search, including the pages Opus reads. The first measured run (pilot 01, 2026-11-27) cost $3.29 because every revision round re-checked the whole script. Revision rounds now re-check only new, changed or failed claims, and research is capped at about 2 searches per claim (16 max).
+Estimated LLM cost is about **$1.00–1.50 per Short**. Almost all of it sits in the Opus steps, which is where quality matters. Fact-check research with web search is the largest single item: about $0.035 per search, including the pages Opus reads. The first measured run (pilot 01, 2026-11-27) cost $3.29 because every revision round re-checked the whole script. Revision rounds now re-check only new, changed or failed claims, and research is capped at about 2 searches per claim (16 max). Research now goes through the Message Batches API by default (half-price tokens; search fees assumed full price), which should bring the script stage to roughly $0.50–0.75 per Short. That is an estimate until a batched run is measured.
 
 **Weekly long-form compiler:** each week's 5–7 Shorts on one theme ("Space Week") become a 10-minute deep-dive. It reuses the assets but adds **new connective narration, deeper explanation and chapters**, so it is genuinely more than a stitched compilation; a straight re-upload of Shorts would risk the inauthentic-content flag.
 

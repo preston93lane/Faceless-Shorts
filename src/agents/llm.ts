@@ -23,6 +23,17 @@ const PRICE = {
   webSearch: 0.01,
 } as const;
 
+/** Message Batches bill tokens at half price. Search fees are logged at full price until a bill shows otherwise. */
+export const BATCH_TOKEN_DISCOUNT = 0.5;
+
+export type ClaudeLlmOptions = {
+  /** Send research calls through the Message Batches API: half-price tokens, results in minutes (up to 24 h). */
+  batch?: boolean;
+  /** How often to poll a pending batch. */
+  pollMs?: number;
+  log?: (line: string) => void;
+};
+
 export type CallCost = { step: string; model: string; inputTokens: number; outputTokens: number; webSearches: number; usd: number };
 
 /** Every Claude call made during one pipeline run, so each video's cost can be logged. */
@@ -73,6 +84,7 @@ export class ClaudeLlm implements Llm {
   constructor(
     readonly ledger = new CostLedger(),
     client?: Anthropic,
+    private readonly options: ClaudeLlmOptions = {},
   ) {
     // Claude Code withholds ANTHROPIC_API_KEY from the commands it runs, so cloud sessions read
     // WONDERSCRAPS_ANTHROPIC_KEY instead (same key, different variable name).
@@ -111,18 +123,18 @@ export class ClaudeLlm implements Llm {
 
     // Web search runs server-side; a long research turn can pause and must be resumed.
     for (let turn = 0; turn < 6; turn++) {
-      const res = await this.client.beta.messages
-        .stream({
-          model: MODELS.opus,
-          max_tokens: 32000,
-          system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
-          messages,
-          tools,
-          output_config: { effort: req.effort },
-          ...this.fallbackParams("opus"),
-        })
-        .finalMessage();
-      this.record(req.step, "opus", res.usage);
+      const params = {
+        model: MODELS.opus,
+        max_tokens: 32000,
+        system: [{ type: "text" as const, text: req.system, cache_control: { type: "ephemeral" as const } }],
+        messages,
+        tools,
+        output_config: { effort: req.effort },
+      };
+      const res = this.options.batch
+        ? await this.viaBatch(req.step, params)
+        : await this.client.beta.messages.stream({ ...params, ...this.fallbackParams("opus") }).finalMessage();
+      this.record(req.step, "opus", res.usage, this.options.batch ? BATCH_TOKEN_DISCOUNT : 1);
 
       for (const block of res.content) {
         if (block.type === "web_search_tool_result" && Array.isArray(block.content)) {
@@ -142,7 +154,31 @@ export class ClaudeLlm implements Llm {
     throw new Error(`${req.step}: research did not finish after 6 resumed turns`);
   }
 
-  private record(step: string, model: ModelKey, usage: Anthropic.Beta.BetaUsage) {
+  /**
+   * Runs one request through the Message Batches API and waits for it. Batches reject `fallbacks`,
+   * so a refusal here is not retried on another model; checkStop reports it.
+   */
+  private async viaBatch(step: string, params: Anthropic.Beta.Messages.MessageCreateParamsNonStreaming): Promise<Anthropic.Beta.BetaMessage> {
+    const log = this.options.log ?? ((l: string) => console.error(l));
+    const pollMs = this.options.pollMs ?? 30_000;
+    const batch = await this.client.beta.messages.batches.create({ requests: [{ custom_id: step, params }] });
+    log(`${step}: queued as batch ${batch.id}; most finish within an hour (24 h max)`);
+    const started = Date.now();
+    for (;;) {
+      const b = await this.client.beta.messages.batches.retrieve(batch.id);
+      if (b.processing_status === "ended") break;
+      await new Promise((r) => setTimeout(r, pollMs));
+      log(`${step}: batch ${batch.id} still running (${Math.round((Date.now() - started) / 60_000)} min)`);
+    }
+    for await (const r of await this.client.beta.messages.batches.results(batch.id)) {
+      if (r.result.type === "succeeded") return r.result.message;
+      const why = r.result.type === "errored" ? JSON.stringify(r.result.error) : r.result.type;
+      throw new Error(`${step}: batch ${batch.id} request ${r.result.type}: ${why}`);
+    }
+    throw new Error(`${step}: batch ${batch.id} returned no result`);
+  }
+
+  private record(step: string, model: ModelKey, usage: Anthropic.Beta.BetaUsage, tokenRate = 1) {
     const p = PRICE[model];
     const searches = usage.server_tool_use?.web_search_requests ?? 0;
     const input = usage.input_tokens;
@@ -150,7 +186,8 @@ export class ClaudeLlm implements Llm {
       (input * p.input +
         usage.output_tokens * p.output +
         (usage.cache_read_input_tokens ?? 0) * p.cacheRead +
-        (usage.cache_creation_input_tokens ?? 0) * p.cacheWrite) /
+        (usage.cache_creation_input_tokens ?? 0) * p.cacheWrite) *
+        tokenRate /
         1e6 +
       searches * PRICE.webSearch;
     this.ledger.add({ step, model: MODELS[model], inputTokens: input, outputTokens: usage.output_tokens, webSearches: searches, usd });

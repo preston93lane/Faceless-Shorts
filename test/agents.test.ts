@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import type { z } from "zod";
 import { applyRules, claimsForPrompt, factCheck, feedbackFrom, searchBudget, sourcesForDescription } from "../src/agents/fact-checker";
-import type { Llm, ResearchRequest, ResearchResult, StructuredRequest } from "../src/agents/llm";
+import { ClaudeLlm, type Llm, type ResearchRequest, type ResearchResult, type StructuredRequest } from "../src/agents/llm";
 import { checkSpoken } from "../src/agents/narration-prep";
 import { type FactCheck, fullNarration, type Script, ScriptSchema, TIKTOK_BONUS_ID, tiktokNarration, validateScript } from "../src/agents/schemas";
 import { isReputable, normalizeUrl } from "../src/agents/sources";
@@ -227,5 +227,42 @@ describe("script stage", () => {
     const changed = pilot.claims.filter((c) => c.beatId === pilot.claims[1].beatId).map((c) => c.id);
     const asked = [...llm.researched[0].user.matchAll(/^(c\d+):/gm)].map((m) => m[1]);
     expect(asked).toEqual(changed);
+  });
+});
+
+describe("batch research", () => {
+  it("sends research through a batch without fallbacks, waits for it, and logs half-price tokens", async () => {
+    const created: unknown[] = [];
+    let polls = 0;
+    const message = {
+      content: [
+        { type: "web_search_tool_result", content: [{ type: "web_search_result", url: "https://nasa.gov/a" }] },
+        { type: "text", text: "c1 supported", citations: [] },
+      ],
+      stop_reason: "end_turn",
+      usage: { input_tokens: 1_000_000, output_tokens: 0, server_tool_use: { web_search_requests: 10 } },
+    };
+    const client = {
+      beta: {
+        messages: {
+          batches: {
+            create: async (p: unknown) => (created.push(p), { id: "b1" }),
+            retrieve: async () => ({ processing_status: ++polls < 2 ? "in_progress" : "ended" }),
+            results: async () => (async function* () {
+              yield { custom_id: "fact-check-research", result: { type: "succeeded", message } };
+            })(),
+          },
+        },
+      },
+    };
+    const llm = new ClaudeLlm(undefined, client as never, { batch: true, pollMs: 0, log: () => {} });
+    const r = await llm.research({ step: "fact-check-research", system: "s", user: "u", effort: "high", maxSearches: 4 });
+    expect(r.text).toBe("c1 supported");
+    expect(r.retrievedUrls).toEqual(["https://nasa.gov/a"]);
+    const params = (created[0] as { requests: { params: Record<string, unknown> }[] }).requests[0].params;
+    expect(params).not.toHaveProperty("fallbacks");
+    expect(params).not.toHaveProperty("stream");
+    // 1M input tokens at $4/M, halved, plus 10 searches at full price.
+    expect(llm.ledger.totalUsd).toBeCloseTo(2 + 0.1);
   });
 });

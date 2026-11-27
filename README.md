@@ -28,6 +28,7 @@ npm run typecheck
 # Script stage (needs ANTHROPIC_API_KEY; in Claude Code cloud sessions set WONDERSCRAPS_ANTHROPIC_KEY instead)
 npm run script:new -- --topic "What if you fell through the Earth?" --series "WHAT IF?"
 npm run script:check -- --script scripts/pilot-01-hole-through-earth.json
+# Fact-check research runs through the Message Batches API (half price, minutes to hours). Add --now for an immediate, full-price run.
 npm run voice:samples        # voice comparison clips
 npx tsx src/demo/read-script.ts scripts/pilot-01-hole-through-earth.json public/generated/pilot-01/draft-read.wav
 

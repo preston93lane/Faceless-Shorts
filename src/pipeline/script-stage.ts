@@ -5,6 +5,9 @@
  *   npm run script:new -- --topic "What if you fell through the Earth?" --series "WHAT IF?" [--notes "..."]
  *   npm run script:check -- --script scripts/pilot-01-hole-through-earth.json   # fact-check an existing script
  *
+ * Fact-check research goes through the Message Batches API (half-price tokens; each research round can
+ * take from a few minutes up to 24 h). Add --now to skip batching and pay full price for an immediate answer.
+ *
  * Exits with code 2 when the script still fails after the revision rounds; it then needs a human.
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -102,9 +105,16 @@ export function reviewMarkdown(r: StageResult, costUsd: number): string {
 const isMain = process.argv[1]?.endsWith("script-stage.ts");
 if (isMain) {
   const { values } = parseArgs({
-    options: { topic: { type: "string" }, series: { type: "string" }, notes: { type: "string" }, script: { type: "string" } },
+    options: {
+      topic: { type: "string" },
+      series: { type: "string" },
+      notes: { type: "string" },
+      script: { type: "string" },
+      // Skip the Message Batches API: full price, but results right away.
+      now: { type: "boolean", default: false },
+    },
   });
-  const llm = new ClaudeLlm();
+  const llm = new ClaudeLlm(undefined, undefined, { batch: !values.now });
   let input: Parameters<typeof runScriptStage>[1];
   if (values.script) {
     input = { script: ScriptSchema.parse(JSON.parse(await readFile(values.script, "utf8"))) };
