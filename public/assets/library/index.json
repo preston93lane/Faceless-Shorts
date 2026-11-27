@@ -1,4 +1,12 @@
 {
+  "brine-shrimp-egg": {
+    "key": "brine-shrimp-egg",
+    "description": "A single small round sphere, not pointed, in dull tan-brown. It has a smooth, slightly matte shell, one shallow dent on one side, and a small soft highlight near the top. Paper-cutout style with a white sticker border.",
+    "file": "assets/library/brine-shrimp-egg.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 862584418,
+    "createdAt": "2026-11-27"
+  },
   "earth": {
     "key": "earth",
     "description": "Planet Earth seen from space: a round globe with blue oceans, green and tan continents and a few white cloud swirls",
@@ -23,6 +31,14 @@
     "seed": 27589384,
     "createdAt": "2026-11-27"
   },
+  "glass-block": {
+    "key": "glass-block",
+    "description": "A clear glossy glass cube with smooth rounded edges, pale blue-tinted transparent sides and bright white shine highlights on the corners",
+    "file": "assets/library/glass-block.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 986395452,
+    "createdAt": "2026-11-27"
+  },
   "human-spine": {
     "key": "human-spine",
     "description": "A side view of a human spine: a gently S-curved stack of bone-colored vertebrae separated by soft pink cushion-like discs",
@@ -37,6 +53,22 @@
     "file": "assets/library/kid-figure.png",
     "model": "fal-ai/flux/dev",
     "seed": 963773034,
+    "createdAt": "2026-11-27"
+  },
+  "protein-blob": {
+    "key": "protein-blob",
+    "description": "A single compact, rounded, lumpy blob made of several twisted ribbon loops folded tightly together in purple, teal and orange. The overall outline is irregular and roughly round, with no points, petals or radial symmetry. It looks soft and squishy, in paper-cutout style with a white sticker border.",
+    "file": "assets/library/protein-blob.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 567553608,
+    "createdAt": "2026-11-27"
+  },
+  "protein-ribbon": {
+    "key": "protein-ribbon",
+    "description": "A single long floppy ribbon in bright teal, loosely looping and curling in gentle waves with no fixed shape, soft rounded ends",
+    "file": "assets/library/protein-ribbon.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 185894105,
     "createdAt": "2026-11-27"
   },
   "rice-grain": {
@@ -63,6 +95,14 @@
     "seed": 498365577,
     "createdAt": "2026-11-27"
   },
+  "sugar-crystals": {
+    "key": "sugar-crystals",
+    "description": "A small neat heap of white sparkling sugar crystals, fine granules piled into a soft mound with tiny glints of light",
+    "file": "assets/library/sugar-crystals.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 999861618,
+    "createdAt": "2026-11-27"
+  },
   "sun": {
     "key": "sun",
     "description": "The Sun: a big glowing yellow-orange ball with a few curling flame-like solar prominences around its edge",
@@ -77,6 +117,14 @@
     "file": "assets/library/tardigrade.png",
     "model": "fal-ai/flux/dev",
     "seed": 227937806,
+    "createdAt": "2026-11-27"
+  },
+  "tardigrade-tun": {
+    "key": "tardigrade-tun",
+    "description": "A compact, shrunken, wrinkled barrel shape seen from the side: a short plump pale beige oval, slightly wider in the middle and tapered at both ends. It has several deep horizontal creases around the body. No legs, no neck, no horns or antennae are visible; the head is fully tucked in and at most a tiny closed dot-eye sits at one end. The surface is matte and slightly dried, in paper-cutout style with a white sticker border.",
+    "file": "assets/library/tardigrade-tun.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 952275573,
     "createdAt": "2026-11-27"
   }
 }
