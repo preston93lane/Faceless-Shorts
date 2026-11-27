@@ -25,7 +25,7 @@ npm ci                      # .npmrc skips onnxruntime's CUDA download
 npm test                    # unit tests
 npm run typecheck
 
-# Script stage (needs ANTHROPIC_API_KEY)
+# Script stage (needs ANTHROPIC_API_KEY; in Claude Code cloud sessions set WONDERSCRAPS_ANTHROPIC_KEY instead)
 npm run script:new -- --topic "What if you fell through the Earth?" --series "WHAT IF?"
 npm run script:check -- --script scripts/pilot-01-hole-through-earth.json
 npm run voice:samples        # voice comparison clips

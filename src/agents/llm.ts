@@ -74,7 +74,9 @@ export class ClaudeLlm implements Llm {
     readonly ledger = new CostLedger(),
     client?: Anthropic,
   ) {
-    this.client = client ?? new Anthropic({ maxRetries: 3 });
+    // Claude Code withholds ANTHROPIC_API_KEY from the commands it runs, so cloud sessions read
+    // WONDERSCRAPS_ANTHROPIC_KEY instead (same key, different variable name).
+    this.client = client ?? new Anthropic({ maxRetries: 3, apiKey: process.env.ANTHROPIC_API_KEY || process.env.WONDERSCRAPS_ANTHROPIC_KEY });
   }
 
   /** Opus calls opt into server-side refusal fallbacks; Haiku has none. */
