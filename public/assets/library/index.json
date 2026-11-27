@@ -7,6 +7,22 @@
     "seed": 991646881,
     "createdAt": "2026-11-27"
   },
+  "earth-chord-tunnel": {
+    "key": "earth-chord-tunnel",
+    "description": "Planet Earth cut cleanly in half, seen as a flat circular cross-section. A thin outer crust of blue ocean with green land patches, a thick orange-brown mantle, an orange outer core and a glowing yellow inner core at the center. Two small red map pins stand on the surface in the upper part of the circle, about a quarter of the circumference apart. One thin straight dark tunnel connects the two pins as a shallow straight line through the crust and upper mantle, staying well above the core and not passing through the center.",
+    "file": "assets/library/earth-chord-tunnel.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 303756339,
+    "createdAt": "2026-11-27"
+  },
+  "earth-cross-section-tunnel": {
+    "key": "earth-cross-section-tunnel",
+    "description": "Planet Earth cut cleanly in half to show its insides: a thin outer crust of blue ocean and green land, a thick orange-brown mantle layer, an orange outer core and a glowing yellow inner core at the center, with one thin straight dark tunnel running from the top surface straight down through the center to the bottom surface",
+    "file": "assets/library/earth-cross-section-tunnel.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 27589384,
+    "createdAt": "2026-11-27"
+  },
   "human-spine": {
     "key": "human-spine",
     "description": "A side view of a human spine: a gently S-curved stack of bone-colored vertebrae separated by soft pink cushion-like discs",
@@ -15,12 +31,36 @@
     "seed": 568842612,
     "createdAt": "2026-11-27"
   },
+  "kid-figure": {
+    "key": "kid-figure",
+    "description": "A calm adult person in paper-cutout style with adult body proportions: short brown hair, a simple neutral face, a red T-shirt, blue jeans or long shorts, and white sneakers. Two arms and two legs are spread out wide as if floating weightlessly. Plain style with no oversized head or rosy cheeks.",
+    "file": "assets/library/kid-figure.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 963773034,
+    "createdAt": "2026-11-27"
+  },
   "rice-grain": {
     "key": "rice-grain",
     "description": "One single grain of white rice, a small elongated oval grain",
     "file": "assets/library/rice-grain.png",
     "model": "fal-ai/flux/dev",
     "seed": 559588166,
+    "createdAt": "2026-11-27"
+  },
+  "speedometer": {
+    "key": "speedometer",
+    "description": "A round speedometer dial with a white face, black tick marks around the curved edge, and a red needle pointing far to the right, set in a dark gray rim",
+    "file": "assets/library/speedometer.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 114738293,
+    "createdAt": "2026-11-27"
+  },
+  "stopwatch": {
+    "key": "stopwatch",
+    "description": "A round silver stopwatch with a plain white face, small black tick marks around the edge, a single thin black hand, and a round push button on top",
+    "file": "assets/library/stopwatch.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 498365577,
     "createdAt": "2026-11-27"
   },
   "sun": {
