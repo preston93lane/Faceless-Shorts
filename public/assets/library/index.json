@@ -63,14 +63,6 @@
     "seed": 567553608,
     "createdAt": "2026-11-27"
   },
-  "protein-ribbon": {
-    "key": "protein-ribbon",
-    "description": "A single long, thin, floppy ribbon in bright teal, loosely wavy and curling in two or three gentle S-shaped loops. The ends are soft and rounded and do not cross each other in an X; the overall outline is an irregular, relaxed squiggle. Matte paper-cutout style with a white sticker border.",
-    "file": "assets/library/protein-ribbon.png",
-    "model": "fal-ai/flux/dev",
-    "seed": 808939109,
-    "createdAt": "2026-11-27"
-  },
   "rice-grain": {
     "key": "rice-grain",
     "description": "One single grain of white rice, a small elongated oval grain",
@@ -95,14 +87,6 @@
     "seed": 498365577,
     "createdAt": "2026-11-27"
   },
-  "sugar-crystals": {
-    "key": "sugar-crystals",
-    "description": "A small neat heap of white sparkling sugar crystals, fine granules piled into a soft mound with tiny glints of light",
-    "file": "assets/library/sugar-crystals.png",
-    "model": "fal-ai/flux/dev",
-    "seed": 999861618,
-    "createdAt": "2026-11-27"
-  },
   "sun": {
     "key": "sun",
     "description": "The Sun: a big glowing yellow-orange ball with a few curling flame-like solar prominences around its edge",
@@ -111,20 +95,12 @@
     "seed": 87731048,
     "createdAt": "2026-11-27"
   },
-  "tardigrade": {
-    "key": "tardigrade",
-    "description": "A microscopic tardigrade seen from the side: a chubby, caterpillar-like segmented body shaped like a short sausage, eight stubby leg nubs underneath (four pairs) each tipped with tiny hooked claws, a small round puckered mouth opening at the front end, no ears, no snout, no tail, translucent pale beige color",
-    "file": "assets/library/tardigrade.png",
+  "teaspoon-glowing-blob": {
+    "key": "teaspoon-glowing-blob",
+    "description": "A shiny silver teaspoon lying at a slight angle, its oval bowl heaped with a small rounded mound of glowing blue-white material that gives off a soft pale blue glow. Paper-cutout style with a white sticker border.",
+    "file": "assets/library/teaspoon-glowing-blob.png",
     "model": "fal-ai/flux/dev",
-    "seed": 227937806,
-    "createdAt": "2026-11-27"
-  },
-  "tardigrade-tun": {
-    "key": "tardigrade-tun",
-    "description": "A compact, shrunken, wrinkled barrel seen from the side: a short plump pale beige oval, slightly wider in the middle and tapered at both ends. Several deep horizontal creases wrap around the body, and the surface looks matte and slightly dried with fine wrinkles. There are no legs, no antennae, no horns, no ears, no snout and no mouth; the head is fully tucked in, with at most one tiny dark dot at one end. Paper-cutout style with a white sticker border.",
-    "file": "assets/library/tardigrade-tun.png",
-    "model": "fal-ai/flux/dev",
-    "seed": 463034545,
+    "seed": 102173150,
     "createdAt": "2026-11-27"
   }
 }
