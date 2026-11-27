@@ -19,6 +19,25 @@
     ]
   },
   {
+    "id": "teaspoon-of-neutron-star",
+    "title": "What If You Swallowed a Teaspoon of Neutron Star?",
+    "series": "WHAT IF?",
+    "date": "2026-11-27",
+    "templates": [
+      "title",
+      "fact",
+      "hero",
+      "scale",
+      "compare",
+      "big-number",
+      "fact",
+      "arrows",
+      "hero",
+      "list",
+      "hero"
+    ]
+  },
+  {
     "id": "tardigrades-turn-to-glass",
     "title": "Do Tardigrades Survive Drying Out by Turning to Glass?",
     "series": "WILD BIOLOGY",
@@ -35,6 +54,45 @@
       "list",
       "hero",
       "progress",
+      "hero"
+    ]
+  },
+  {
+    "id": "taller-in-the-morning",
+    "title": "Why You're Taller in the Morning Than at Night",
+    "series": "YOUR AMAZING BODY",
+    "date": "2026-11-27",
+    "templates": [
+      "title",
+      "fact",
+      "hero",
+      "list",
+      "arrows",
+      "compare",
+      "hero",
+      "big-number",
+      "fact",
+      "hero"
+    ]
+  },
+  {
+    "id": "earths-inside-sun-in-rice",
+    "title": "If Every Earth Were a Grain of Rice, How Much Rice Is the Sun?",
+    "series": "SPACE & SCALE",
+    "date": "2026-11-27",
+    "templates": [
+      "title",
+      "big-number",
+      "count",
+      "scale",
+      "fact",
+      "big-number",
+      "compare",
+      "hero",
+      "progress",
+      "big-number",
+      "compare",
+      "list",
       "hero"
     ]
   }

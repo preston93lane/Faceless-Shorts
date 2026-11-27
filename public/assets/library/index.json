@@ -1,10 +1,42 @@
 {
+  "adult-open-mouth": {
+    "key": "adult-open-mouth",
+    "description": "Head and shoulders of an adult man around thirty-five years old, with realistic adult proportions: a longish oval face, a defined square jaw with a hint of stubble shadow, and small almond-shaped eyes with dark brown irises. Short neat brown hair. His expression is calm and serious, with straight level eyebrows and eyes looking straight ahead. His lips are pushed slightly forward and parted into a small round opening about as wide as his nose, with only dark shadow inside and the corners of the mouth not turned up, as if he is about to take a bite. The whole face is one even warm beige skin tone, with the cheeks the same color as the forehead and chin. He wears a plain red crew-neck T-shirt. Made from layered cut colored paper with clearly visible torn and cut paper edges, slight paper texture, and soft drop shadows between the layers, with a white cut-out border around the whole figure. Plain background.",
+    "file": "assets/library/adult-open-mouth.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 482667440,
+    "createdAt": "2026-11-27"
+  },
+  "adult-standing": {
+    "key": "adult-standing",
+    "description": "A grown man of about 35, standing straight and facing forward, cut out of layered colored paper with clearly visible cut edges and flat paper layers, surrounded by a white sticker border on a plain light background. Realistic adult proportions: a small head that is one-eighth of his total height, broad shoulders, a visible neck and a defined adult jawline. Short brown hair. The face is one single flat piece of uniform tan skin-colored paper, with small dark dot eyes, thin eyebrows, a short straight nose line and a slight closed-mouth smile; the cheeks are the same color as the rest of the face. He wears a plain red crew-neck T-shirt, straight blue jeans and white sneakers, with both arms relaxed at his sides and five fingers on each hand. Flat colors, no gradients, no text.",
+    "file": "assets/library/adult-standing.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 938777018,
+    "createdAt": "2026-11-27"
+  },
+  "astronaut": {
+    "key": "astronaut",
+    "description": "Flat paper-cutout illustration of an adult astronaut floating with arms and legs gently spread, built entirely from flat layered pieces of cut colored paper (white, light gray, pale gold) with visible cut paper edges and slight drop shadows between layers, like a collage, not 3D and not shiny. Realistic adult proportions: the helmet is small relative to the body (about one-seventh of total height), with long slim arms and long legs. Plain white spacesuit made of simple flat paper shapes, with two or three light gray paper strips as folds at the elbows and knees. Round white helmet with a flat pale-gold paper visor that hides the face. A plain rectangular light gray backpack shape peeks out behind the shoulders. Simple white mitten-shaped gloves and white boots. The chest is completely plain: no control box, no buttons, no badges, no patches, no emblems, no flags, no logos, no writing. Surrounded by a thick white sticker border on a plain background.",
+    "file": "assets/library/astronaut.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 446673809,
+    "createdAt": "2026-11-27"
+  },
   "brine-shrimp-egg": {
     "key": "brine-shrimp-egg",
     "description": "A single small round sphere, not pointed, in dull tan-brown. It has a smooth, slightly matte shell, one shallow dent on one side, and a small soft highlight near the top. Paper-cutout style with a white sticker border.",
     "file": "assets/library/brine-shrimp-egg.png",
     "model": "fal-ai/flux/dev",
     "seed": 862584418,
+    "createdAt": "2026-11-27"
+  },
+  "city-skyline": {
+    "key": "city-skyline",
+    "description": "A row of tall city buildings side by side: rectangular towers of different heights in gray, blue and tan with neat rows of small yellow lit windows and flat or pointed roofs, standing on a flat base line. Paper-cutout style with a white sticker border.",
+    "file": "assets/library/city-skyline.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 627896771,
     "createdAt": "2026-11-27"
   },
   "earth": {
@@ -55,12 +87,44 @@
     "seed": 963773034,
     "createdAt": "2026-11-27"
   },
+  "measuring-tape": {
+    "key": "measuring-tape",
+    "description": "A yellow cloth measuring tape partly unrolled in a gentle curve, with evenly spaced thin black tick marks along its edge and no numbers, ending in a small metal tip. Paper-cutout style with a white sticker border, plain background, no text.",
+    "file": "assets/library/measuring-tape.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 801046659,
+    "createdAt": "2026-11-27"
+  },
+  "neutron-particle": {
+    "key": "neutron-particle",
+    "description": "One smooth solid ball seen from the side, cut from gray-blue paper. Use one large full circle of medium gray-blue paper as the ball. On top of it, glue one single soft-edged lighter gray-blue patch covering the upper-left half. Along the lower-right edge, add one thin dark gray-blue crescent of paper for shadow. Place one small white oval highlight slightly above and to the left of the center. Use only these few large flat paper pieces, with no repeated stacked circles, no stripes, no bands, no rings and no target pattern. The surface should look evenly smooth. Paper-cutout style with a white sticker border, plain background, no text.",
+    "file": "assets/library/neutron-particle.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 880761428,
+    "createdAt": "2026-11-27"
+  },
+  "neutron-star": {
+    "key": "neutron-star",
+    "description": "A small perfectly round glowing ball in bright blue-white, with a smooth surface, a soft pale blue halo around its edge and a bright white highlight near the top. Paper-cutout style with a white sticker border.",
+    "file": "assets/library/neutron-star.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 55469795,
+    "createdAt": "2026-11-27"
+  },
   "protein-blob": {
     "key": "protein-blob",
     "description": "A single compact, rounded, lumpy blob made of several twisted ribbon loops folded tightly together in purple, teal and orange. The overall outline is irregular and roughly round, with no points, petals or radial symmetry. It looks soft and squishy, in paper-cutout style with a white sticker border.",
     "file": "assets/library/protein-blob.png",
     "model": "fal-ai/flux/dev",
     "seed": 567553608,
+    "createdAt": "2026-11-27"
+  },
+  "protein-ribbon": {
+    "key": "protein-ribbon",
+    "description": "A very thin, long teal paper string lying flat on the background, like a piece of yarn or a long noodle, about as thin as a pencil line compared to its length, winding loosely in a wavy squiggle with two or three gentle curves across the picture. It is the same narrow width everywhere, and both ends are small plain rounded tips that are far apart and never touch or cross. The strip is completely flat, with no rolled, curled or folded parts, no stitching lines, no wide areas and no edges or borders drawn on it. Made of matte cut paper in two or three flat shades of teal, with a white sticker border around the outline, on a plain light background, with no text.",
+    "file": "assets/library/protein-ribbon.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 983054826,
     "createdAt": "2026-11-27"
   },
   "rice-grain": {
@@ -79,6 +143,22 @@
     "seed": 114738293,
     "createdAt": "2026-11-27"
   },
+  "spinal-disc": {
+    "key": "spinal-disc",
+    "description": "A single spinal disc from the human backbone, made of layered cut colored paper, shown as a thick, wide, flat cushion like a short cylinder, viewed from the front and above at a 30-degree tilt. The whole object is clearly wider than tall: about three times as wide as its overall height in the picture. The top surface is a horizontal oval, wider left-to-right than front-to-back, with one gentle shallow inward curve in the middle of its far (back) edge. Below the top surface, a visible vertical side band of medium blue paper wraps around the front and sides, showing the cushion's thickness. On the top surface, four or five thin concentric horizontal oval rings alternate between pale blue and white paper, following the oval outline. In the exact center sits a smaller horizontal oval of bright aqua paper with a slight sheen, clearly a different color from the rings. All pieces are solid, with no holes. Visible torn and cut paper edges, a white sticker border around the whole object, plain light background, no text, no face.",
+    "file": "assets/library/spinal-disc.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 13575348,
+    "createdAt": "2026-11-27"
+  },
+  "spinal-disc-flat": {
+    "key": "spinal-disc-flat",
+    "description": "A single spinal disc (the cushion between two backbones) cut from layered colored paper, seen from a three-quarter angle above so both the top face and the side wall are visible. The disc is shaped like a kidney bean: wide, with one gently indented long edge and smoothly rounded ends, with no wavy or scalloped edges. It is a flat, squashed slab whose side wall is thin, only about one tenth as tall as the disc is wide. The side wall is a slightly darker pale blue strip of paper. The top face has 4 smooth concentric bean-shaped rings in pale blue shades, getting lighter toward the middle. In the center of the top face sits one small, flattened, smooth oval of translucent light-blue paper, the gel core, taking up about one fifth of the top's width. Visible cut paper edges, soft paper shadows, a white sticker border around the whole shape, a plain light background, and no text, letters or numbers.",
+    "file": "assets/library/spinal-disc-flat.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 557124474,
+    "createdAt": "2026-11-27"
+  },
   "stopwatch": {
     "key": "stopwatch",
     "description": "A round silver stopwatch with a plain white face, small black tick marks around the edge, a single thin black hand, and a round push button on top",
@@ -87,12 +167,36 @@
     "seed": 498365577,
     "createdAt": "2026-11-27"
   },
+  "sugar-crystals": {
+    "key": "sugar-crystals",
+    "description": "A flat, two-dimensional paper-cutout illustration of a small, low, gently rounded mound of granulated sugar, like a little dome about three times wider than it is tall. The mound is one solid cut-paper shape in white, with two or three stacked layers of very pale grey and pale blue-grey paper to show simple flat shading on one side. On the surface are many tiny flat paper squares, all about the same small size, scattered evenly to suggest fine sugar grains, and a few tiny loose paper squares lie on the ground at the base. Visible cut paper edges and slight paper texture, no realistic lighting, no 3D rendering, no soft shadows, no large chunks or rocks. A clean white border surrounds the whole shape. Single subject on a plain light background, no text, no face.",
+    "file": "assets/library/sugar-crystals.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 632748846,
+    "createdAt": "2026-11-27"
+  },
   "sun": {
     "key": "sun",
     "description": "The Sun: a big glowing yellow-orange ball with a few curling flame-like solar prominences around its edge",
     "file": "assets/library/sun.png",
     "model": "fal-ai/flux/dev",
     "seed": 87731048,
+    "createdAt": "2026-11-27"
+  },
+  "tardigrade": {
+    "key": "tardigrade",
+    "description": "Side view of a tardigrade, a microscopic animal, made of layered pale beige cut paper with a white sticker border. The body is a plump cylinder of even thickness from end to end, like a short sausage, with 4 faint vertical segment lines. Both ends are fully rounded and blunt; the rear end does not taper or narrow. At the very front tip of the head is a small round mouth opening: a tiny short tube end shown as a small darker beige circle. There is no smile line, no nostril, no lips and no chin. One tiny dark dot eye sits just above and behind the mouth. Exactly 8 legs total, in 4 pairs. Near side: exactly 4 short, soft, rounded stumpy bumps in light beige with no joints or knees. Far side: exactly 4 matching bumps in slightly darker beige, each peeking out just behind its near-side partner. Three of these pairs hang straight down, evenly spaced along the belly. The fourth pair attaches at the bottom of the rounded rear end and points backward and down. Each leg tip has 3 or 4 tiny dark curved claws. Flat paper shapes with visible layered edges and no painted shading. No tail, ears, snout, nose, antennae, whiskers or text.",
+    "file": "assets/library/tardigrade.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 866079289,
+    "createdAt": "2026-11-27"
+  },
+  "tardigrade-tun": {
+    "key": "tardigrade-tun",
+    "description": "Side view of one plump, smooth oval shaped like a jelly bean lying flat, cut from matte pale beige paper with a white sticker border. Both ends are equally rounded and exactly the same size and shape, and the oval is widest in the middle. The outline is a clean, smooth curve with no ruffles, frills, pleats or crimped edges. Across the body, seven evenly spaced, gently curved bands run from the top edge to the bottom edge, like the segments of a rolled-up pill bug. They alternate between pale beige and slightly darker beige paper strips. A few thin, faint wrinkle lines lie on the surface. The whole shape uses only beige tones, with no brown or dark spots anywhere. It has no eye, dot, hole, mouth, face, head, stem, tail, point, legs or antennae. No letters or numbers. Simple flat layered paper with soft edges.",
+    "file": "assets/library/tardigrade-tun.png",
+    "model": "fal-ai/flux/dev",
+    "seed": 783862185,
     "createdAt": "2026-11-27"
   },
   "teaspoon-glowing-blob": {
