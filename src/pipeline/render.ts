@@ -3,8 +3,8 @@
  * -1.5 dBTP) with ffmpeg's two-pass loudnorm. YouTube and TikTok turn louder videos down anyway; hitting the
  * target means quiet ones are not left too soft.
  */
-import { execFileSync } from "node:child_process";
-import { existsSync, renameSync, writeFileSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
+import { existsSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { VideoSpec } from "../video/types";
 
@@ -31,12 +31,14 @@ export function renderSpec(spec: VideoSpec, outMp4: string, opts: { composition?
 export type LoudnessMeasure = { input_i: string; input_tp: string; input_lra: string; input_thresh: string; target_offset: string };
 
 export function measureLoudness(file: string): LoudnessMeasure {
-  const out = execFileSync(
+  // ffmpeg prints the measurement on stderr.
+  const r = spawnSync(
     "ffmpeg",
     ["-hide_banner", "-nostats", "-i", file, "-af", `loudnorm=I=${LOUDNESS.lufs}:TP=${LOUDNESS.truePeak}:LRA=${LOUDNESS.lra}:print_format=json`, "-f", "null", "-"],
-    { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+    { encoding: "utf8" },
   );
-  return parseLoudnormJson(out);
+  if (r.status !== 0) throw new Error(`ffmpeg loudness measurement failed: ${r.stderr.slice(-300)}`);
+  return parseLoudnormJson(r.stderr);
 }
 
 export function parseLoudnormJson(text: string): LoudnessMeasure {
@@ -47,13 +49,7 @@ export function parseLoudnormJson(text: string): LoudnessMeasure {
 
 /** Two-pass loudnorm on the audio; the video stream is copied untouched. */
 export function normalizeLoudness(input: string, output: string): void {
-  let measured: LoudnessMeasure;
-  try {
-    measured = measureLoudness(input);
-  } catch {
-    renameSync(input, output);
-    return;
-  }
+  const measured = measureLoudness(input);
   const filter = `loudnorm=I=${LOUDNESS.lufs}:TP=${LOUDNESS.truePeak}:LRA=${LOUDNESS.lra}:measured_I=${measured.input_i}:measured_TP=${measured.input_tp}:measured_LRA=${measured.input_lra}:measured_thresh=${measured.input_thresh}:offset=${measured.target_offset}:linear=true`;
   execFileSync("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-i", input, "-c:v", "copy", "-af", filter, "-ar", "48000", "-c:a", "aac", "-b:a", "192k", output]);
   execFileSync("rm", ["-f", input]);

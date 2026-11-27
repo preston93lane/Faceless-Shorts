@@ -29,7 +29,7 @@ const ShotSchema = z.object({
     .nullable()
     .describe('big-number only: the value the counter runs up to, e.g. {value: 17000, decimals: 0, prefix: "", suffix: " mph"}.'),
   items: z.array(z.object({ text: z.string(), cueWord: z.string() })).describe("list only: 2-4 cards of max 6 words, each with the spoken word that drops it in. Else []."),
-  arrowLabels: z.array(z.string()).describe("arrows only: 2-4 one or two word labels. Else []."),
+  arrowLabels: z.array(z.string()).describe("arrows only: 2-4 one or two word labels, in CLOCKWISE order starting from the TOP arrow (four arrows: top, right, bottom, left; three: top, lower right, lower left). Else []."),
   direction: z.enum(["in", "out"]).nullable().describe("arrows only."),
   fromLabel: z.string().nullable().describe("progress only: start label."),
   toLabel: z.string().nullable().describe("progress only: end label."),
@@ -73,6 +73,8 @@ Rules:
 - Numbers on screen must match the narration and the claims exactly (convert spelled-out words back to digits).
 - Cue words must appear in the spoken text of that shot, spelled exactly as written there (the spoken text spells numbers out, so a cue is e.g. "thirty-eight", not "38").
 - The last shot should echo the first (same subject) so the loop back to the hook feels seamless.
+- Left and right must match reality: on a US map the West Coast is on the left; arrows and labels must point the way they say.
+- Relationships between things (paths, forces, sizes, before/after) are shown by the template, not drawn inside one picture. Prefer several simple subjects (a planet, a stopwatch, a person) over one complex diagram: the image model draws single objects well and precise geometry (tunnels at an angle, cutaways with paths, maps with routes) badly.
 
 Image descriptions (they go straight to an image model, which takes words literally):
 - Describe the subject by its visible shape, parts, colors and pose. Never use nicknames or metaphors that name another thing: say "a chubby segmented sausage-shaped body with eight stubby clawed legs", not "water bear".
@@ -80,7 +82,8 @@ Image descriptions (they go straight to an image model, which takes words litera
 - Accurate anatomy and science: the right number of legs, the right shape, the right colors.
 - Branded things are generic stand-ins: "a sleek red sports car", never a brand or logo; "a blocky green pixel-art monster", never a game character.
 - Keep keys generic and reusable ("human-heart", "grain-of-rice") and reuse a library key whenever its description fits, to save money.
-- Nothing scary or gory; calm and friendly.`;
+- Nothing scary or gory; calm and friendly.
+- People are adults (the channel is general-audience, never "made for kids"): "an adult person in a red shirt and jeans, simple friendly face, normal adult proportions". Never a child, toddler or baby, and never words like kid, child or little in a key or description, unless the topic itself is about children.`;
 
 export function storyboardPrompt(script: Script, spoken: Spoken, library: { key: string; description: string }[], recent: string[][]): string {
   const said = new Map(spoken.beats.map((b) => [b.id, b.spoken]));

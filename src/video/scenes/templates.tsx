@@ -424,8 +424,8 @@ const Progress: React.FC<SceneProps> = ({ dur, props = {} }) => {
   const start = f(props.moveAtMs, fps);
   const end = Math.max(start + fps, f(props.arriveAtMs, fps) || start + fps * 2);
   const p = interpolate(held, [start, end], [0, num(props.fraction, 1)], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.quad) });
-  const x0 = 150;
-  const x1 = 930;
+  const x0 = 210;
+  const x1 = 870;
   const y = 760;
   return (
     <Shot dur={dur} mood={moodOf(props, "warm")} seed="prog">
@@ -435,12 +435,12 @@ const Progress: React.FC<SceneProps> = ({ dur, props = {} }) => {
         </div>
       </Piece>
       <Piece seed="prog-a" x={x0} y={y + 210} at={2} rotate={-2}>
-        <Card size={46} maxWidth={420}>
+        <Card size={46} maxWidth={340}>
           {str(props.fromLabel)}
         </Card>
       </Piece>
       <Piece seed="prog-b" x={x1} y={y + 210} at={4} rotate={2}>
-        <Card size={46} maxWidth={420}>
+        <Card size={46} maxWidth={340}>
           {str(props.toLabel)}
         </Card>
       </Piece>

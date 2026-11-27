@@ -99,7 +99,8 @@ export async function makeShort(llm: ClaudeLlm, script: Script, spoken: Spoken, 
   const out = join(dir, `${slug}.mp4`);
   const music = pickMusic(history.length);
   let qa: QaReport | null = null;
-  const rounds = opts.maxQaRounds ?? 2;
+  // Up to two rounds of redraws (three renders) before a human looks at it.
+  const rounds = opts.maxQaRounds ?? 3;
   for (let round = 1; round <= rounds; round++) {
     const spec = buildSpec({ id: slug, theme: BRAND.theme, script, spoken, storyboard, narration, captions, images, audio: `generated/${slug}/voice.wav`, music });
     await writeFile(join(dir, "spec.json"), JSON.stringify({ spec }, null, 2));

@@ -7,7 +7,7 @@
  *      narration for accuracy, readability, overlaps, made-for-kids signals and anything off-brand.
  * A failed review names the illustrations to redraw; the orchestrator redraws them and renders again.
  */
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { z } from "zod";
 import { measureLoudness } from "../pipeline/render";
@@ -33,11 +33,9 @@ export function probe(file: string): Probe {
 
 /** Black stretches longer than half a second (a missing scene renders black). */
 export function blackSegments(file: string): { startS: number; endS: number }[] {
-  const out = execFileSync("ffmpeg", ["-hide_banner", "-nostats", "-i", file, "-vf", "blackdetect=d=0.5:pic_th=0.95", "-an", "-f", "null", "-"], {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-  return parseBlack(out);
+  // blackdetect reports on stderr.
+  const r = spawnSync("ffmpeg", ["-hide_banner", "-nostats", "-i", file, "-vf", "blackdetect=d=0.5:pic_th=0.95", "-an", "-f", "null", "-"], { encoding: "utf8" });
+  return parseBlack(r.stderr ?? "");
 }
 
 export function parseBlack(text: string): { startS: number; endS: number }[] {
@@ -52,7 +50,7 @@ export function technicalChecks(p: Probe, spec: VideoSpec, loudness: number | nu
   add("frame rate", Math.abs(p.fps - 30) < 0.5, `${p.fps.toFixed(2)} fps`);
   add("duration", p.durationS >= SHORT_LIMITS.minS && p.durationS <= SHORT_LIMITS.maxS, `${p.durationS.toFixed(1)} s (Short limit ${SHORT_LIMITS.minS}-${SHORT_LIMITS.maxS} s)`);
   add("audio", p.hasAudio, p.hasAudio ? "present" : "no audio stream");
-  if (loudness !== null) add("loudness", Math.abs(loudness + 14) <= 1, `${loudness.toFixed(1)} LUFS (target -14)`);
+  add("loudness", loudness !== null && Math.abs(loudness + 14) <= 1, loudness === null ? "could not be measured" : `${loudness.toFixed(1)} LUFS (target -14)`);
   add("black frames", black.length === 0, black.length ? black.map((b) => `${b.startS.toFixed(1)}-${b.endS.toFixed(1)} s`).join(", ") : "none");
   const short = spec.scenes.filter((s) => s.endMs - s.startMs < 1200);
   add("shot length", short.length === 0, short.length ? `${short.length} shot(s) under 1.2 s` : "all shots 1.2 s or longer", "warn");
