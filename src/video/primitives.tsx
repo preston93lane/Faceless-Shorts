@@ -27,6 +27,7 @@ export function useStyledFrame(): number {
 const HATCH_ROLES: Role[] = [
   "moon", "moonShade", "ocean", "land", "sea", "seaDeep", "sand", "hill", "hill2", "house",
   "roof", "window", "tree", "sun", "snow", "accent", "accent2", "star", "paperWhite",
+  "mantle", "outerCore", "innerCore", "tunnel", "figure", "skin",
 ];
 
 export const ThemeDefs: React.FC = () => {

@@ -1,0 +1,13 @@
+{
+  "_note": "Narration prep written by hand (the Haiku step needs ANTHROPIC_API_KEY, which was not available). Checked by checkSpoken() in src/agents/narration-prep.ts.",
+  "beats": [
+    { "id": "b1", "spoken": "What if you jumped into a hole that went straight through the Earth?" },
+    { "id": "b2", "spoken": "You wouldn't fall forever. In about thirty-eight minutes, you'd pop out the other side!" },
+    { "id": "b3", "spoken": "Pretend there's no air and nothing can melt you. You'd speed up all the way down, to about five miles every second. That's across America in about ten minutes!" },
+    { "id": "b4", "spoken": "At the center, gravity hits zero. The whole planet pulls on you from every side, so it all cancels out!" },
+    { "id": "b5", "spoken": "Then you'd shoot up the other side, slowing down, and stop right at the surface." },
+    { "id": "b6", "spoken": "Here's the crazy part. Slide down a straight tunnel between any two cities, like New York and London, and it takes about the same time. Around forty minutes!" },
+    { "id": "b7", "spoken": "If nobody grabs you at the top, you'd fall right back in and do it all again." }
+  ],
+  "tiktokBonus": "Now, in real life this is impossible. Earth's center is over nine thousand degrees Fahrenheit, about as hot as the surface of the Sun! And the deepest hole people have ever dug, in Russia, goes down only about seven and a half miles. That's less than one five-hundredth of the way to the center."
+}

@@ -55,7 +55,7 @@
   ],
   "tiktokBonus": {
     "afterBeatId": "b4",
-    "narration": "Now, in real life this is impossible. Earth's center is over 5,000 degrees Celsius, about as hot as the surface of the Sun! And the deepest hole people have ever dug, in Russia, goes down only about 12 kilometers. That's less than one five-hundredth of the way to the center.",
+    "narration": "Now, in real life this is impossible. Earth's center is over 9,000 degrees Fahrenheit, about as hot as the surface of the Sun! And the deepest hole people have ever dug, in Russia, goes down only about 7.5 miles. That's less than one five-hundredth of the way to the center.",
     "visual": "A paper thermometer next to a paper Sun, both glowing orange; then a tiny drill bit barely scratching the top of the cut-open Earth, with a zoomed-in label."
   },
   "claims": [
@@ -97,12 +97,12 @@
     {
       "id": "c8",
       "beatId": "b4",
-      "claim": "Earth's inner core is over 5,000 degrees Celsius (estimates about 5,200 to 6,000), comparable to the surface of the Sun (about 5,500 degrees Celsius)."
+      "claim": "Earth's inner core is over 9,000 degrees Fahrenheit (estimates about 5,200 to 6,000 degrees Celsius, i.e. about 9,400 to 10,800 degrees Fahrenheit), comparable to the surface of the Sun (about 5,500 degrees Celsius, about 9,900 degrees Fahrenheit)."
     },
     {
       "id": "c9",
       "beatId": "b4",
-      "claim": "The deepest hole ever drilled, the Kola Superdeep Borehole in Russia, reached about 12.2 km, less than 1/500 of the 6,371 km distance to Earth's center."
+      "claim": "The deepest hole ever drilled, the Kola Superdeep Borehole in Russia, reached about 12.2 km (about 7.6 miles), less than 1/500 of the roughly 3,959-mile (6,371 km) distance to Earth's center."
     }
   ],
   "description": "What would actually happen if you jumped into a tunnel straight through the Earth? The answer involves zero gravity, five miles per second, and a strange rule that works for any two cities on the planet.",

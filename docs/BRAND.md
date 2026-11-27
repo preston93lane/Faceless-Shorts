@@ -56,16 +56,27 @@ Each series has its own badge at the top of the frame:
 - **HOW IT WORKS**
 - **ANIMAL SUPERPOWERS**
 - **YOUR AMAZING BODY**
-- **WILD BIOLOGY**: mind-blowing biochemistry and life science (cells, molecules, microbes, plants, DNA). Added 2026-11-27 at the owner's request; the badge name is provisional.
+- **WILD BIOLOGY**: mind-blowing biochemistry and life science (cells, molecules, microbes, plants, DNA). Added 2026-11-27 at the owner's request; badge name confirmed by the owner the same day.
 - **SPACE & SCALE**
 - **MYTH BUSTED**
 
 **Launch focus (first two weeks), owner pick of 2026-11-27:** WHAT IF?, YOUR AMAZING BODY, WILD BIOLOGY, SPACE & SCALE.
 
 ## Content rules (owner decisions, 2026-11-27)
-- **Units:** serious videos use US units first, with metric only where a detail requires it (metric can go on the paper card). Absurd or playful videos measure in funny units like bananas, Bugattis or grains of rice, to get people commenting, with the math still correct.
+- **Units:** serious videos use US units first, with metric only where a detail requires it (metric can go on the paper card). Absurd or playful videos measure in funny units like bananas, Bugattis, Minecraft creepers or grains of rice, to get people commenting, with the math still correct. The same rule covers the TikTok bonus segment (owner, 2026-11-27). Branded units are fine to say, but they're drawn as generic paper stand-ins, never real logos or game art.
 - **Dark topics:** disasters, disease, predators, extinction and historical deaths are allowed when told calmly and factually. No gore, no graphic detail, no fear-bait.
+- **Mix:** about 1 in 5 videos use the funny-units style; the rest are serious.
+- **Depth:** lighter videos sit next to more complex ones meant to draw in adults: stellar nucleosynthesis, the Big Bang, the Sun compared with other stars (composition as well as size), radio telescopes, the stories of major physics discoveries, biochemistry, anatomy, kinesiology and sports science. The owner can supply sources to watch for space facts.
+- **Evolution** is fair game and should come up often. **Climate change** is in scope too. Both are told as the mainstream science.
+- **Off-limits for now:** diet and weight. The owner may come back to them later, on purpose.
+- **Accuracy vs. fun:** the more complex the video, the more exact it must be. Simplifications and analogies are fine, especially in the lighter videos, as long as they stay true as said.
 - These rules are in the Script Writer's brief (`src/agents/style-guide.ts`).
+
+### Starter ideas (owner reactions, 2026-11-27)
+- WILD BIOLOGY: bacterial cells in your body; tardigrades' sugar-glass survival trick; why onions make you cry. Good, but add more complex, adult-level topics too.
+- YOUR AMAZING BODY: stomach lining renewing every few days; taller in the morning. Body facts are great: crazy anatomy, kinesiology, sports science.
+- SPACE & SCALE: how many Earths fit in the Sun, in grains of rice. Yes, plus the serious topics listed above.
+- WHAT IF?: swallowing a drop of a neutron star. Yes.
 
 ## To do
 - [ ] Image-generation style prompt (fal.ai) locked to this look, tested on 10 subjects. Needs fal credit.

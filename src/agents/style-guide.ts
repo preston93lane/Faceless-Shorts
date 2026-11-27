@@ -26,8 +26,19 @@ Also write a TikTok bonus segment (15-25 seconds) that goes deeper on one beat, 
 
 # Units and numbers (owner rule, 2026-11-27)
 - Serious, explanatory videos: US units first (miles, feet, pounds, degrees Fahrenheit). Use metric only when the detail requires it (a value that is only ever measured in metric, like nanometers or a cited lab measurement). The metric value can go on the paper card instead.
-- Absurd or playful videos (silly hypotheticals, "how many X would it take"): measure in funny, concrete units such as bananas, Bugattis, grains of rice, school buses or blue whales. They are meant to get people commenting about the unit. The math must still be right: list the conversion in the claim (e.g. "a banana is about 7 inches long, so 1 mile = about 9,000 bananas").
+- This applies to the TikTok bonus segment too: a serious video's bonus uses US units, a funny video's bonus uses absurd units.
+- Absurd or playful videos (silly hypotheticals, "how many X would it take"): measure in funny, concrete units such as bananas, Bugattis, Minecraft creepers, grains of rice, school buses or blue whales. They are meant to get people commenting about the unit. The math must still be right: list the conversion in the claim (e.g. "a banana is about 7 inches long, so 1 mile = about 9,000 bananas"; "a Minecraft creeper is 1.7 blocks, about 5 feet 7 inches, tall").
+- Named units like a Bugatti or a Minecraft creeper may be said in the narration, but the visual must be a generic paper stand-in (a sleek sports car, a blocky green monster), never the real logo, car badge or game character art.
 - Round sensibly and say "about".
+
+# Mix and depth (owner rules, 2026-11-27)
+- Funny-units videos are about 1 in 5. The rest are serious and explanatory, so the absurd style stays a fun surprise and not the channel's identity.
+- Range of depth: lighter, broad-audience videos sit next to more complex ones that draw in adults and teach real science (how heavy elements are forged in stars, how the Big Bang unfolded, how the Sun compares with other stars in composition as well as size, how radio telescopes work, the stories behind major physics discoveries, biochemistry, anatomy, kinesiology and the science of sports).
+- Evolution is core science and should come up often (in WILD BIOLOGY, ANIMAL SUPERPOWERS, YOUR AMAZING BODY). Climate change is in scope too. Present both as the mainstream scientific consensus, calmly, with the evidence.
+- Off-limits for now: diet and weight (dieting, weight loss, body size). Do not write scripts on those topics.
+
+# Accuracy vs. simplicity (owner rule, 2026-11-27)
+The more complex the video, the more exact it must be. Simplifications and analogies are fine, especially in the lighter videos, but they must stay true as said, and the key assumption goes in the narration. In a complex video, give the real mechanism and real numbers and do not round away an important nuance.
 
 # Dark topics (owner rule, 2026-11-27)
 Disasters, disease, predators, extinction and historical deaths are fine when told calmly and factually: no gore, no graphic injury detail, no suffering played for shock, no fear-bait. Explain the science, not the horror.

@@ -81,7 +81,7 @@ const Snowflake: React.FC<{ r: number }> = ({ r }) => {
 };
 
 /** Text label drawn in the theme's display font. */
-const Label: React.FC<{ text: string; size: number; role?: "accent" | "accent2" | "paperWhite"; anchor?: "middle" | "start" }> = ({
+export const Label: React.FC<{ text: string; size: number; role?: "accent" | "accent2" | "paperWhite"; anchor?: "middle" | "start" }> = ({
   text,
   size,
   role = "accent",

@@ -1,8 +1,8 @@
 # Pilot 01: "What If You Jumped Into a Hole Through the Earth?"
 
-_Status: **approved by the owner as is** (2026-11-27). Next: run the Fact Checker agent, apply its fixes, render._
+_Status: **approved by the owner** (2026-11-27). **Draft Short rendered** (paper style, Michael/Puck voice, 50.8 s): `npx tsx src/demo/build-pilot-01.ts`, then render (see the file header). **Fact Checker agent: still not run.** `ANTHROPIC_API_KEY` is set on the environment but did not reach the session's processes, so run `npm run script:check -- --script scripts/pilot-01-hole-through-earth.json` in a new session and re-render if it changes any narration._
 
-> Units note: the owner's units rule (US units first for serious videos) was set right after approving this script. The TikTok bonus still says "12 kilometers" and "degrees Celsius". The script was approved as is, so it is unchanged; the owner can ask to convert those (about 7.5 miles, over 9,000 °F) in the render session.
+> Units: the owner asked for US units in the TikTok bonus (serious video), so it now says "over 9,000 degrees Fahrenheit" and "about 7.5 miles" (claims c8 and c9 updated to match). Narration prep (spelling numbers out for the voice) was done by hand in `scripts/pilot-01-hole-through-earth.spoken.json` and passes `checkSpoken()`.
 
 - Script file: [`scripts/pilot-01-hole-through-earth.json`](../scripts/pilot-01-hole-through-earth.json). It passes the code checks: hook ≤16 words, beat structure, length, no kid targeting.
 - Length: Short **~50 s** (136 words; measured read-through 50.0 s). TikTok cut **~68 s** with the bonus segment.
@@ -17,7 +17,7 @@ _Status: **approved by the owner as is** (2026-11-27). Next: run the Fact Checke
 | b2 | Surprise | You wouldn't fall forever. In about 38 minutes, you'd pop out the other side! | 38 minutes! | A stopwatch card sweeps to 38 |
 | b3 | Beat | Pretend there's no air and nothing can melt you. You'd speed up all the way down, to about 5 miles every second. That's across America in about 10 minutes! | 5 miles per second | Figure drops with speed lines; then a dotted line races across a paper USA map |
 | b4 | Beat | At the center, gravity hits zero. The whole planet pulls on you from every side, so it all cancels out! | Zero gravity | Figure floats at the center; arrows point outward in every direction and pulse |
-| *TikTok bonus* | | Now, in real life this is impossible. Earth's center is over 5,000 degrees Celsius, about as hot as the surface of the Sun! And the deepest hole people have ever dug, in Russia, goes down only about 12 kilometers. That's less than one five-hundredth of the way to the center. | | Thermometer next to a paper Sun; then a tiny drill barely scratching the Earth |
+| *TikTok bonus* | | Now, in real life this is impossible. Earth's center is over 9,000 degrees Fahrenheit, about as hot as the surface of the Sun! And the deepest hole people have ever dug, in Russia, goes down only about 7.5 miles. That's less than one five-hundredth of the way to the center. | | Thermometer next to a paper Sun; then a tiny drill barely scratching the Earth |
 | b5 | Beat | Then you'd shoot up the other side, slowing down, and stop right at the surface. | Out the other side | Figure rises and peeks out at the bottom of the Earth |
 | b6 | Crazy part | Here's the crazy part. Slide down a straight tunnel between any two cities, like New York and London, and it takes about the same time. Around 40 minutes! | Any two cities?! | A straight tunnel under the ocean between two city pins; a little paper train slides through |
 | b7 | Loop | If nobody grabs you at the top, you'd fall right back in and do it all again. | Again and again | Figure slips back in; camera eases back to the opening shot (seamless replay into b1) |

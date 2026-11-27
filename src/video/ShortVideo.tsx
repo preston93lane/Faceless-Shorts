@@ -4,6 +4,7 @@ import React from "react";
 import { AbsoluteFill, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { Captions, SeriesBadge } from "./Captions";
 import { PaperGrain, ThemeDefs, ThemeProvider, useTheme } from "./primitives";
+import { HOLE_SCENES } from "./scenes/hole";
 import { MOON_SCENES, type SceneProps } from "./scenes/moon";
 import { TAIL_MS, type VideoSpec } from "./types";
 
@@ -12,7 +13,7 @@ loadFont({ family: "Montserrat", url: staticFile("fonts/Montserrat-Black.woff2")
 loadFont({ family: "Lilita One", url: staticFile("fonts/LilitaOne-Regular.woff2"), weight: "400" });
 loadFont({ family: "Gaegu", url: staticFile("fonts/Gaegu-Bold.woff2"), weight: "700" });
 
-const SCENES: Record<string, React.FC<SceneProps>> = { ...MOON_SCENES };
+const SCENES: Record<string, React.FC<SceneProps>> = { ...MOON_SCENES, ...HOLE_SCENES };
 
 /** Frames over which a new scene transitions in (the previous scene keeps playing underneath). */
 const TRANSITION = 8;

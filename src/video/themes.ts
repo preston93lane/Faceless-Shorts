@@ -22,7 +22,13 @@ export type Role =
   | "accent"
   | "accent2"
   | "ink"
-  | "paperWhite";
+  | "paperWhite"
+  | "mantle"
+  | "outerCore"
+  | "innerCore"
+  | "tunnel"
+  | "figure"
+  | "skin";
 
 export type Theme = {
   id: ThemeId;
@@ -89,6 +95,12 @@ export const THEMES: Record<ThemeId, Theme> = {
       accent2: "#FF4FA3",
       ink: "#0B1026",
       paperWhite: "#FFFFFF",
+      mantle: "#FF8A3D",
+      outerCore: "#FF4FA3",
+      innerCore: "#FFD23F",
+      tunnel: "#05071A",
+      figure: "#9B5DE5",
+      skin: "#FFD7B0",
     },
     night: ["#070B24", "#1E1B57"],
     day: ["#0E2A6B", "#2E66D6"],
@@ -130,6 +142,12 @@ export const THEMES: Record<ThemeId, Theme> = {
       accent2: "#FF595E",
       ink: "#1D2440",
       paperWhite: "#FFFDF5",
+      mantle: "#FF924C",
+      outerCore: "#FF595E",
+      innerCore: "#FFCA3A",
+      tunnel: "#1D2440",
+      figure: "#9B5DE5",
+      skin: "#F6C9A0",
     },
     night: ["#1C2752", "#34407A"],
     day: ["#8ECAE6", "#CDEBF6"],
@@ -173,6 +191,12 @@ export const THEMES: Record<ThemeId, Theme> = {
       accent2: "#FFA6C9",
       ink: "#1F2A2E",
       paperWhite: "#F5F5F0",
+      mantle: "#FFC59E",
+      outerCore: "#FFA6C9",
+      innerCore: "#FFE680",
+      tunnel: "#11181A",
+      figure: "#C9B6FF",
+      skin: "#F5E0C8",
     },
     night: ["#1B2427", "#26343A"],
     day: ["#1B2427", "#26343A"],
