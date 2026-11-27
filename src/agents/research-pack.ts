@@ -16,6 +16,7 @@ import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { z } from "zod";
 import type { Llm } from "./llm";
+import { route } from "./routing";
 import { type Script, VERDICTS } from "./schemas";
 import { hostOf, isReputable, normalizeUrl } from "./sources";
 
@@ -178,8 +179,7 @@ export function packForChecker(pack: VerifiedPack): string {
 export async function checkAgainstPack(llm: Llm, script: Script, claimsText: string, pack: VerifiedPack): Promise<PackCheck> {
   return llm.structured({
     step: "fact-check-pack",
-    model: "opus",
-    effort: "high",
+    ...route("packCheck"),
     system: PACK_CHECK_SYSTEM,
     user: [
       `Script title: ${script.title}`,

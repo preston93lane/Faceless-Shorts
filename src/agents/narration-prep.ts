@@ -5,6 +5,7 @@
  * no digits or symbols left, and the wording otherwise unchanged.
  */
 import type { Llm } from "./llm";
+import { route } from "./routing";
 import { type Script, type Spoken, SpokenSchema } from "./schemas";
 
 const SYSTEM = `You prepare narration for a text-to-speech engine. Rewrite each line so it reads exactly as it should be spoken:
@@ -18,7 +19,7 @@ export async function prepareNarration(llm: Llm, script: Script): Promise<Spoken
     beats: script.beats.map((b) => ({ id: b.id, text: b.narration })),
     tiktokBonus: script.tiktokBonus.narration,
   });
-  const spoken = await llm.structured({ step: "narration-prep", model: "haiku", effort: "low", system: SYSTEM, user, schema: SpokenSchema });
+  const spoken = await llm.structured({ step: "narration-prep", ...route("narrationPrep"), system: SYSTEM, user, schema: SpokenSchema });
   const problems = checkSpoken(script, spoken);
   if (problems.length) throw new Error(`Narration prep output failed checks:\n- ${problems.join("\n- ")}`);
   return spoken;

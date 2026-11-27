@@ -1,7 +1,7 @@
 /**
  * Thin Claude API layer shared by every agent. Model routing (docs/PLAN.md, "Model routing"):
- *   - Opus 5.5 for research, planning, writing and review.
- *   - Haiku 5.5 only for mechanical transforms whose output code validates afterwards.
+ *   - Which model each step uses lives in src/agents/routing.ts (Sonnet 5.5 and Haiku 5.5 by default since
+ *     2026-11-27 for cost; Opus 5.5 on request).
  *
  * Agents depend on the `Llm` interface, not on the SDK, so tests can pass a fake.
  */
@@ -11,6 +11,7 @@ import type { z } from "zod";
 
 export const MODELS = {
   opus: "claude-opus-5-5",
+  sonnet: "claude-sonnet-5-5",
   haiku: "claude-haiku-5-5",
 } as const;
 export type ModelKey = keyof typeof MODELS;
@@ -19,6 +20,7 @@ export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
 /** USD per million tokens, and per web search. Used for the per-video cost log. */
 const PRICE = {
   opus: { input: 4, output: 20, cacheRead: 0.2, cacheWrite: 5 },
+  sonnet: { input: 2, output: 10, cacheRead: 0.1, cacheWrite: 2.5 },
   haiku: { input: 0.1, output: 0.5, cacheRead: 0.01, cacheWrite: 0.125 },
   webSearch: 0.01,
 } as const;
@@ -65,6 +67,8 @@ export type ResearchRequest = {
   user: string;
   effort: Effort;
   maxSearches: number;
+  /** Defaults to Sonnet (src/agents/routing.ts). */
+  model?: ModelKey;
 };
 
 export type ResearchResult = {
@@ -95,7 +99,7 @@ export class ClaudeLlm implements Llm {
 
   /** Opus calls opt into server-side refusal fallbacks; Haiku has none. */
   private fallbackParams(model: ModelKey) {
-    return model === "opus"
+    return model === "opus" || model === "sonnet"
       ? { betas: ["server-side-fallback-2026-07-01"] as Anthropic.Beta.AnthropicBeta[], fallbacks: "default" as const }
       : {};
   }
@@ -131,7 +135,7 @@ export class ClaudeLlm implements Llm {
     // Web search runs server-side; a long research turn can pause and must be resumed.
     for (let turn = 0; turn < 6; turn++) {
       const params = {
-        model: MODELS.opus,
+        model: MODELS[req.model ?? "sonnet"],
         max_tokens: 32000,
         system: [{ type: "text" as const, text: req.system, cache_control: { type: "ephemeral" as const } }],
         messages,
@@ -140,8 +144,8 @@ export class ClaudeLlm implements Llm {
       };
       const res = this.options.batch
         ? await this.viaBatch(req.step, params)
-        : await this.client.beta.messages.stream({ ...params, ...this.fallbackParams("opus") }).finalMessage();
-      this.record(req.step, "opus", res.usage, this.options.batch ? BATCH_TOKEN_DISCOUNT : 1);
+        : await this.client.beta.messages.stream({ ...params, ...this.fallbackParams(req.model ?? "sonnet") }).finalMessage();
+      this.record(req.step, req.model ?? "sonnet", res.usage, this.options.batch ? BATCH_TOKEN_DISCOUNT : 1);
 
       for (const block of res.content) {
         if (block.type === "web_search_tool_result" && Array.isArray(block.content)) {

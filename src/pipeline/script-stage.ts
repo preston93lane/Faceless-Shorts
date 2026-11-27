@@ -34,7 +34,8 @@ import {
 import { loadPack, packForWriter, packProblems, usableFacts, type VerifiedPack } from "../agents/research-pack";
 import { reviseScript, writeValidScript } from "../agents/script-writer";
 
-export const MAX_FACT_ROUNDS = 2;
+/** Automatic revise-and-recheck rounds before a human edits the script (each round is a paid research pass). */
+export const MAX_FACT_ROUNDS = 1;
 
 export type StageResult = {
   script: Script;

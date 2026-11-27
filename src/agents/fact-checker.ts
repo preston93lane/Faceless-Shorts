@@ -1,12 +1,13 @@
 /**
  * Fact Checker agent.
  *   0. With a research pack (research-pack.ts), claims the pack covers are judged against it without search.
- *   1. Research (Opus 5.5 + server-side web search): checks the remaining claims, writes findings.
+ *   1. Research (model per src/agents/routing.ts + server-side web search): checks the remaining claims.
  *   2. Structuring (Haiku 5.5): turns the findings into FactCheck JSON. Mechanical, and checked by 3.
  *   3. Code rules: a source only counts if web search actually returned that URL and the site is
  *      on the reputable list; "supported" needs 2 such sources, otherwise it is downgraded.
  */
 import type { Llm } from "./llm";
+import { route } from "./routing";
 import { type FactCheck, FactCheckSchema, type Script, TIKTOK_BONUS_ID } from "./schemas";
 import { checkAgainstPack, sourcesForFacts, type VerifiedPack } from "./research-pack";
 import { isReputable, normalizeUrl, TRUSTED_LIST_FOR_PROMPT } from "./sources";
@@ -54,9 +55,9 @@ export function claimsForPrompt(script: Script, claims = script.claims): string 
   return claims.map((c) => claimLine(script, c)).join("\n");
 }
 
-/** Searches allowed for one research call: about 2 per claim, capped. */
+/** Searches allowed for one research call: about 1 per claim, capped at 8 (cost, 2026-11-27). */
 export function searchBudget(claimCount: number): number {
-  return Math.min(16, Math.max(4, claimCount * 2));
+  return Math.min(8, Math.max(3, claimCount));
 }
 
 /** A check of an earlier version of the script, so unchanged claims are not researched again. */
@@ -135,7 +136,7 @@ async function webCheck(llm: Llm, script: Script, claims: Script["claims"]): Pro
   const research = await llm.research({
     step: "fact-check-research",
     system: RESEARCH_SYSTEM,
-    effort: "high",
+    ...route("factResearch"),
     maxSearches: searchBudget(claims.length),
     user: [
       `Script title: ${script.title}`,
@@ -148,8 +149,7 @@ async function webCheck(llm: Llm, script: Script, claims: Script["claims"]): Pro
 
   const structured = await llm.structured({
     step: "fact-check-structure",
-    model: "haiku",
-    effort: "low",
+    ...route("factStructure"),
     system: STRUCTURE_SYSTEM,
     user: `Claim ids: ${claims.map((c) => c.id).join(", ")}\n\n## Findings\n${research.text}`,
     schema: FactCheckSchema,

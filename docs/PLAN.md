@@ -4,7 +4,7 @@ _Status: **approved 2026-11-27**, build starts with Phase 0/1. Research and sour
 
 **Decisions (2026-11-27)**
 - **Audience:** general audience. The animation will naturally appeal to kids, but nothing targets or labels itself as "for kids." Videos are set to "not made for kids" unless QA flags one.
-- **Models:** Opus 5.5 for research, planning, writing and reviewing; Haiku 5.5 only for mechanical steps whose output is checked downstream. See [Model routing](#model-routing).
+- **Models (changed 2026-11-27, owner decision after the pilots cost ~$20):** Sonnet 5.5 for writing, storyboards, fact checks and QA; Haiku 5.5 for image checks and mechanical steps; Opus 5.5 only on request (`WONDERSCRAPS_QUALITY=opus`). The owner researches topics outside the API (their own Opus sessions, Google, reference videos) and hands the pipeline research packs, so most Shorts need no paid web search. Routing table: `src/agents/routing.ts`.
 - **Voice:** Kokoro (free, local) to start.
 - **Storage and review:** Dropbox instead of Google Drive.
 - **Brand:** the name is **Wonderscraps** (`@wonderscraps` on all four platforms), the style is **Paper Cutout** with calmer motion, and the voice is **Kokoro Michael**. See [BRAND.md](BRAND.md).
@@ -66,7 +66,9 @@ The pipeline is a **code-orchestrated workflow**: each "agent" is a focused Clau
 
 ### Model routing
 
-The rule is conservative: **Opus 5.5** handles anything that involves research, planning, creative judgment or review. **Haiku 5.5** handles only mechanical transforms, where the output is validated by code or reviewed later by an Opus step. If a step is in doubt, it goes to Opus.
+**Current routing (2026-11-27, `src/agents/routing.ts`):** Sonnet 5.5 for script writing, revisions, fact checks, storyboards and the final QA review; Haiku 5.5 for image checks, structuring fact-check findings and narration prep. `WONDERSCRAPS_QUALITY=opus` moves the judgment steps back to Opus 5.5 for a complex topic or a spot check. The table below is the original Opus-first plan, kept for reference.
+
+The original rule was conservative: **Opus 5.5** handled anything that involves research, planning, creative judgment or review, and **Haiku 5.5** only mechanical transforms. It produced good scripts but cost $2–3 per Short in practice.
 
 | Opus 5.5 (`claude-opus-5-5`) | Haiku 5.5 (`claude-haiku-5-5`) |
 |---|---|
@@ -78,7 +80,7 @@ The rule is conservative: **Opus 5.5** handles anything that involves research, 
 | Long-form outline and narration | |
 | Weekly analytics strategy report | |
 
-Estimated LLM cost is about **$1.00–1.50 per Short**. Almost all of it sits in the Opus steps, which is where quality matters. Fact-check research with web search is the largest single item: about $0.035 per search, including the pages Opus reads. The first measured run (pilot 01, 2026-11-27) cost $3.29 because every revision round re-checked the whole script. Revision rounds now re-check only new, changed or failed claims, and research is capped at about 2 searches per claim (16 max). Research now goes through the Message Batches API by default (half-price tokens; search fees assumed full price), which should bring the script stage to roughly $0.50–0.75 per Short. That is an estimate until a batched run is measured.
+Measured: the first five pilot scripts cost **$1.76–3.29 each** on Opus at high effort, about $20 in all, three-quarters of it in web-researched fact checks with repeated revision rounds. Now: Sonnet/Haiku routing, research packs first, at most 8 searches and 1 automatic revision round, and a $0.40 cap on each video stage. Estimated Claude cost is about **$0.10–0.15 per Short with a research pack** and about **$0.30 without one**, to be confirmed on the next pilots.
 
 **Weekly long-form compiler:** each week's 5–7 Shorts on one theme ("Space Week") become a 10-minute deep-dive. It reuses the assets but adds **new connective narration, deeper explanation and chapters**, so it is genuinely more than a stitched compilation; a straight re-upload of Shorts would risk the inauthentic-content flag.
 
@@ -89,7 +91,7 @@ Estimated LLM cost is about **$1.00–1.50 per Short**. Almost all of it sits in
 | Layer | Choice | Cost | Why |
 |---|---|---|---|
 | Language | TypeScript (Node 22) | — | One language for the orchestrator and Remotion |
-| LLM | Claude API: **Opus 5.5** for research, planning and review; **Haiku 5.5** for mechanical steps ([routing](#model-routing)); Message Batches (50% off) for non-urgent nightly scripting | ~$1.00–1.50 per Short | Quality matters most in scripting, fact-checking and QA |
+| LLM | Claude API: **Sonnet 5.5** for judgment steps, **Haiku 5.5** for checks and mechanical steps, Opus on request ([routing](#model-routing)); Message Batches (50% off) for web research | ~$0.10–0.30 per Short | Hard rules (sources, URLs, lengths) are enforced in code, not by the model |
 | Animation | **Remotion** | Free (individuals and teams ≤3) | Code-driven motion graphics; best quality per dollar; official Claude Code agent skills exist |
 | Images | Flux (schnell for drafts, dev/pro for heroes) via fal.ai or Replicate | ~$0.003–0.03 per image | Cheapest decent image API; a style lock keeps the look consistent |
 | Voice | **Kokoro-82M** (local CPU, Apache-2.0); ElevenLabs optional | $0 (or $22/mo) | Free and good; ElevenLabs gives a more distinctive branded voice |
@@ -110,14 +112,14 @@ Estimated LLM cost is about **$1.00–1.50 per Short**. Almost all of it sits in
 ### Cost per video (budget tier, recommended to start)
 | Item | Short (45s + TikTok cut) | Long-form (10 min) |
 |---|---|---|
-| Claude (Opus: scout, script, fact-check with web search, storyboard, QA vision; Haiku: mechanical steps) | ~$1.00–1.50 (script stage measured ~$0.80–1.20) | ~$1.40–2.00 with the owner's research pack; ~$3–5 without ([LONG-FORM.md](LONG-FORM.md)) |
+| Claude (Sonnet: script, fact check, storyboard, QA; Haiku: image checks, mechanical steps) | ~$0.10–0.30 | ~$0.70–1.20 with the owner's research pack ([LONG-FORM.md](LONG-FORM.md)) |
 | Images (8–14 new; library reuse grows) | ~$0.05–0.30 | ~$0.50–1.00 |
 | Voice (Kokoro) | $0 | $0 |
 | Render (GitHub Actions) | $0 | $0 |
 | **Total** | **≈ $1.10–1.80** | **≈ $4–6** |
 
 ### Monthly run cost (30 Shorts + 30 TikToks + 4 long-form)
-- **Budget tier: about $60–85/month.** Claude about $50–65, images about $5–15.
+- **Budget tier: about $15–25/month.** Claude about $5–10, images about $5–15 (fal.ai, billed separately).
 - **Mid tier: about $60–80/month.** Adds the $22/mo ElevenLabs voice and better hero images.
 - **Premium: about $100–150/month.** Adds 1–2 AI video hero shots per Short.
 
@@ -157,7 +159,7 @@ Estimated LLM cost is about **$1.00–1.50 per Short**. Almost all of it sits in
 
 ### Accounts and API keys (required for the autonomous pipeline)
 These go into **GitHub Actions secrets**, or this cloud environment's secrets for testing. Never paste them into chat.
-1. **Anthropic API key** (console.anthropic.com), with a ~$70–90/mo budget limit set.
+1. **Anthropic API key** (console.anthropic.com), with a ~$20/mo budget limit set.
 2. **New YouTube channel** on a Brand Account, plus a **Google Cloud project** with **YouTube Data API v3** and **YouTube Analytics API** enabled and an OAuth client. I'll generate the refresh-token script.
 3. **TikTok account** (personal creator account; Creator Rewards requires 18+ and an eligible country) plus a **TikTok for Developers app** with Login Kit and Content Posting API (`video.upload`; later `video.publish` + audit). The app review needs a website and privacy-policy URL; I can make a simple GitHub Pages site for that.
 4. **fal.ai or Replicate API key** for images (~$10 prepaid to start).

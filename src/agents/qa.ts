@@ -3,7 +3,7 @@
  *   1. Technical checks in code (ffprobe/ffmpeg): size, frame rate, duration, audio, loudness, black frames,
  *      timing of shots and captions.
  *   2. Variety: the shot-template sequence against recent uploads (the "templated content" risk).
- *   3. Claude vision (Opus 5.5): one frame per shot plus every new illustration, checked against the
+ *   3. Claude vision (Sonnet 5.5 by default, src/agents/routing.ts): one frame per shot plus every new illustration, checked against the
  *      narration for accuracy, readability, overlaps, made-for-kids signals and anything off-brand.
  * A failed review names the illustrations to redraw; the orchestrator redraws them and renders again.
  */
@@ -13,6 +13,7 @@ import { z } from "zod";
 import { measureLoudness } from "../pipeline/render";
 import type { VideoSpec } from "../video/types";
 import type { Llm } from "./llm";
+import { route } from "./routing";
 import type { Script } from "./schemas";
 import type { Storyboard } from "./storyboard";
 
@@ -123,8 +124,7 @@ export async function visionReview(
   ];
   return llm.structured({
     step: "qa-vision",
-    model: "opus",
-    effort: "high",
+    ...route("qaVision"),
     system: VISION_SYSTEM,
     user: [`Title: ${script.title}`, `Series: ${script.series}`, `Description: ${script.description}`, `Review the ${frames.length} shot frames and ${newImages.length} illustrations above.`].join("\n"),
     images,
@@ -132,11 +132,11 @@ export async function visionReview(
   });
 }
 
-/** One frame per shot, 75% of the way through it (after its cue motion), scaled to 540 px wide. */
+/** One frame per shot, 75% of the way through it (after its cue motion), scaled to 360 px wide (enough to read cards; keeps vision tokens low). */
 export function extractFrames(file: string, spec: VideoSpec): { shot: number; jpeg: Buffer; atMs: number }[] {
   return spec.scenes.map((s, i) => {
     const atMs = s.startMs + (s.endMs - s.startMs) * 0.75;
-    const jpeg = execFileSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-ss", (atMs / 1000).toFixed(3), "-i", file, "-frames:v", "1", "-vf", "scale=540:-2", "-q:v", "4", "-f", "image2", "-c:v", "mjpeg", "-"], {
+    const jpeg = execFileSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-ss", (atMs / 1000).toFixed(3), "-i", file, "-frames:v", "1", "-vf", "scale=360:-2", "-q:v", "5", "-f", "image2", "-c:v", "mjpeg", "-"], {
       maxBuffer: 20 * 1024 * 1024,
     });
     return { shot: i + 1, jpeg, atMs };

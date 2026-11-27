@@ -1,9 +1,10 @@
 /**
- * Script Writer agent (Opus 5.5). Writes a hook-first Short script plus its TikTok bonus,
+ * Script Writer agent (model per src/agents/routing.ts). Writes a hook-first Short script plus its TikTok bonus,
  * title, description, tags and a claims list for the Fact Checker. Can also revise a script
  * from fact-check results and code-validation notes.
  */
 import type { Llm } from "./llm";
+import { route } from "./routing";
 import { type Script, ScriptSchema, type Series, validateScript } from "./schemas";
 import { WRITING_GUIDE } from "./style-guide";
 
@@ -24,7 +25,7 @@ export async function writeScript(llm: Llm, brief: ScriptBrief): Promise<Script>
   ]
     .filter(Boolean)
     .join("\n");
-  return llm.structured({ step: "script-writer", model: "opus", effort: "high", system: WRITING_GUIDE, user, schema: ScriptSchema });
+  return llm.structured({ step: "script-writer", ...route("scriptWriter"), system: WRITING_GUIDE, user, schema: ScriptSchema });
 }
 
 export async function reviseScript(llm: Llm, script: Script, feedback: string[]): Promise<Script> {
@@ -39,7 +40,7 @@ export async function reviseScript(llm: Llm, script: Script, feedback: string[])
     `## Current script`,
     JSON.stringify(script, null, 2),
   ].join("\n");
-  return llm.structured({ step: "script-reviser", model: "opus", effort: "high", system: WRITING_GUIDE, user, schema: ScriptSchema });
+  return llm.structured({ step: "script-reviser", ...route("scriptReviser"), system: WRITING_GUIDE, user, schema: ScriptSchema });
 }
 
 /** Writes a script and revises it until the code checks pass (max `rounds` revisions). */

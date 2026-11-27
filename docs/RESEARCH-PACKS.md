@@ -27,6 +27,9 @@ With a good pack, most scripts need no web searches at all.
 
 `research/hole-through-earth.json` is a complete example, built from the pilot's fact check.
 
+## Using other videos for ideas
+Reference videos are good for finding topics, hooks that work, and facts to verify. The pack should hold facts with their own sources, not another channel's script. Write our narration and visuals fresh: closely re-creating someone else's video risks copyright claims and YouTube's reused-content rules, which can demonetize the whole channel.
+
 ## How the pipeline trusts a pack
 
 The research session runs outside the pipeline, so code checks its work:

@@ -105,6 +105,8 @@ export async function getImage(
     }
     return null;
   } catch (e) {
+    // A budget stop must end the run, not quietly fall back to a placeholder.
+    if (e instanceof Error && e.name === "OverBudget") throw e;
     log(`image: ${key} failed (${e instanceof Error ? e.message : String(e)}); the shot uses a drawn placeholder`);
     return null;
   }

@@ -178,7 +178,7 @@ class FakeLlm implements Llm {
     throw new Error(`unexpected step ${req.step}`);
   }
   async research(req: ResearchRequest): Promise<ResearchResult> {
-    this.steps.push(`${req.step}:opus`);
+    this.steps.push(`${req.step}:${req.model ?? "sonnet"}`);
     this.researched.push({ user: req.user, maxSearches: req.maxSearches });
     this.checks++;
     return { text: "findings", retrievedUrls: ["https://arxiv.org/abs/1308.1342", "https://phys.org/news/x"], citedUrls: [] };
@@ -193,14 +193,26 @@ describe("script stage", () => {
     expect(r.rounds).toBe(1);
     expect(r.spoken).not.toBeNull();
     expect(llm.steps).toEqual([
-      "script-writer:opus",
-      "fact-check-research:opus",
+      "script-writer:sonnet",
+      "fact-check-research:sonnet",
       "fact-check-structure:haiku",
-      "script-reviser:opus",
-      "fact-check-research:opus",
+      "script-reviser:sonnet",
+      "fact-check-research:sonnet",
       "fact-check-structure:haiku",
       "narration-prep:haiku",
     ]);
+  });
+  it("switches judgment steps to Opus when WONDERSCRAPS_QUALITY=opus, and keeps mechanical steps on Haiku", async () => {
+    process.env.WONDERSCRAPS_QUALITY = "opus";
+    try {
+      const llm = new FakeLlm();
+      await runScriptStage(llm, { brief: { topic: "hole through the Earth", series: "WHAT IF?" } });
+      expect(llm.steps).toContain("script-writer:opus");
+      expect(llm.steps).toContain("fact-check-research:opus");
+      expect(llm.steps).toContain("narration-prep:haiku");
+    } finally {
+      delete process.env.WONDERSCRAPS_QUALITY;
+    }
   });
   it("re-researches only the claim that failed, and keeps the others' verdicts and sources", async () => {
     const llm = new FakeLlm();
@@ -263,8 +275,8 @@ describe("batch research", () => {
     const params = (created[0] as { requests: { params: Record<string, unknown> }[] }).requests[0].params;
     expect(params).not.toHaveProperty("fallbacks");
     expect(params).not.toHaveProperty("stream");
-    // 1M input tokens at $4/M, halved, plus 10 searches at full price.
-    expect(llm.ledger.totalUsd).toBeCloseTo(2 + 0.1);
+    // Research runs on Sonnet: 1M input tokens at $2/M, halved, plus 10 searches at full price.
+    expect(llm.ledger.totalUsd).toBeCloseTo(1 + 0.1);
   });
 });
 

@@ -1,5 +1,5 @@
 /**
- * Storyboard / Art Director agent (Opus 5.5). Turns a fact-checked script into a shot list: one template per
+ * Storyboard / Art Director agent (model per src/agents/routing.ts). Turns a fact-checked script into a shot list: one template per
  * shot (src/video/scenes/templates.tsx), the words that trigger each shot's key motion, and the paper
  * cut-out images it needs. Code then times every shot from the narration audio (spec.ts).
  *
@@ -9,6 +9,7 @@
 import { z } from "zod";
 import { splitSentences } from "../voice/sentences";
 import type { Llm } from "./llm";
+import { route } from "./routing";
 import type { Script, Spoken } from "./schemas";
 
 export const TEMPLATES = ["title", "hero", "big-number", "compare", "scale", "list", "arrows", "progress", "fact", "count"] as const;
@@ -117,8 +118,7 @@ export async function writeStoryboard(
 ): Promise<{ storyboard: Storyboard; problems: string[] }> {
   let storyboard = await llm.structured({
     step: "storyboard",
-    model: "opus",
-    effort: "high",
+    ...route("storyboard"),
     system: STORYBOARD_SYSTEM,
     user: storyboardPrompt(script, spoken, library, recent),
     schema: StoryboardSchema,
@@ -128,8 +128,7 @@ export async function writeStoryboard(
   if (problems.length) {
     storyboard = await llm.structured({
       step: "storyboard-fix",
-      model: "opus",
-      effort: "high",
+      ...route("storyboard"),
       system: STORYBOARD_SYSTEM,
       user: `${storyboardPrompt(script, spoken, library, recent)}\n\n## Your previous storyboard\n${JSON.stringify(storyboard)}\n\n## Fix these problems and return the whole storyboard\n${problems.map((p) => `- ${p}`).join("\n")}`,
       schema: StoryboardSchema,

@@ -52,7 +52,26 @@ export function pickMusic(n: number): { file: string; volume: number } | undefin
 
 const log = (l: string) => console.error(l);
 
-export async function makeShort(llm: ClaudeLlm, script: Script, spoken: Spoken, opts: { scriptDir?: string; maxQaRounds?: number } = {}) {
+/** Default spending cap for the video stage (Claude + images), USD. Above it, the run stops for a human. */
+export const VIDEO_BUDGET_USD = 0.4;
+
+export class OverBudget extends Error {
+  override name = "OverBudget";
+}
+
+export async function makeShort(
+  llm: ClaudeLlm,
+  script: Script,
+  spoken: Spoken,
+  opts: { scriptDir?: string; maxQaRounds?: number; budgetUsd?: number } = {},
+) {
+  const budget = opts.budgetUsd ?? VIDEO_BUDGET_USD;
+  const start = llm.ledger.totalUsd;
+  /** Stops before a paid step once this video has spent its budget. */
+  const guard = (next: string) => {
+    const spent = llm.ledger.totalUsd - start;
+    if (spent > budget) throw new OverBudget(`stopped before ${next}: this video has spent $${spent.toFixed(2)} of its $${budget.toFixed(2)} budget`);
+  };
   const slug = script.slug;
   const dir = join("out/videos", slug);
   const pub = join("public/generated", slug);
@@ -91,10 +110,21 @@ export async function makeShort(llm: ClaudeLlm, script: Script, spoken: Spoken, 
   }
 
   // 3. Illustrations: library first, then fal.ai; each new picture is checked before use.
-  const imageOpts = { ledger: llm.ledger, log, verify: (png: Buffer, s: { key: string; description: string }) => checkImage(llm, png, s) };
+  const imageOpts = {
+    ledger: llm.ledger,
+    log,
+    attempts: 2,
+    verify: (png: Buffer, s: { key: string; description: string }) => {
+      guard(`checking ${s.key}`);
+      return checkImage(llm, png, s);
+    },
+  };
   const before = new Set(Object.keys(await loadLibrary()));
   const images = new Map<string, LibraryEntry | null>();
-  for (const im of storyboard.images) images.set(im.key, await getImage(im, imageOpts));
+  for (const im of storyboard.images) {
+    guard(`drawing ${im.key}`);
+    images.set(im.key, await getImage(im, imageOpts));
+  }
   const newImages = () => storyboard.images.filter((im) => !before.has(im.key) && images.get(im.key)).map((im) => ({ key: im.key, description: im.description, file: images.get(im.key)!.file }));
 
   // 4. Render + QA, redrawing illustrations QA flags (at most maxQaRounds renders).
@@ -108,6 +138,7 @@ export async function makeShort(llm: ClaudeLlm, script: Script, spoken: Spoken, 
     await writeFile(join(dir, "spec.json"), JSON.stringify({ spec }, null, 2));
     log(`render: round ${round}`);
     renderSpec(spec, out);
+    guard("the QA review");
     log("qa: reviewing");
     qa = await runQa({ llm, file: out, spec, script, storyboard, recent, newImages: newImages() });
     const redraw = qa.vision?.redrawImages ?? [];
@@ -182,7 +213,16 @@ if (isMain) {
     spoken = r.spoken;
     scriptDir = undefined;
   }
-  const r = await makeShort(llm, script, spoken, { scriptDir });
+  let r: Awaited<ReturnType<typeof makeShort>>;
+  try {
+    r = await makeShort(llm, script, spoken, { scriptDir });
+  } catch (e) {
+    if (e instanceof OverBudget) {
+      console.log(`NEEDS HUMAN (over budget): ${e.message}. Cached steps are kept; rerun to continue.`);
+      process.exit(3);
+    }
+    throw e;
+  }
   console.log(`${r.qa?.pass ? "READY FOR REVIEW" : "NEEDS HUMAN"}: ${r.out}  (${r.review}, cost $${r.cost.toFixed(2)})`);
   process.exit(r.qa?.pass ? 0 : 2);
 }
