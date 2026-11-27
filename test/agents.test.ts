@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import type { z } from "zod";
-import { applyRules, feedbackFrom, sourcesForDescription } from "../src/agents/fact-checker";
+import { applyRules, claimsForPrompt, feedbackFrom, sourcesForDescription } from "../src/agents/fact-checker";
 import type { Llm, ResearchRequest, ResearchResult, StructuredRequest } from "../src/agents/llm";
 import { checkSpoken } from "../src/agents/narration-prep";
-import { type FactCheck, fullNarration, type Script, ScriptSchema, tiktokNarration, validateScript } from "../src/agents/schemas";
+import { type FactCheck, fullNarration, type Script, ScriptSchema, TIKTOK_BONUS_ID, tiktokNarration, validateScript } from "../src/agents/schemas";
 import { isReputable, normalizeUrl } from "../src/agents/sources";
 import { runScriptStage } from "../src/pipeline/script-stage";
 import { parseVoiceSpec } from "../src/voice/kokoro";
@@ -36,6 +36,11 @@ describe("validateScript", () => {
     expect(p).toMatch(/last beat must be the loop/);
     expect(p).toMatch(/Short runs about/);
     expect(p).toMatch(/unknown beat b99/);
+  });
+  it("lets a claim point at the TikTok bonus, and shows the checker the bonus narration", () => {
+    const s: Script = { ...pilot, claims: [...pilot.claims, { id: "cx", beatId: TIKTOK_BONUS_ID, claim: "x" }] };
+    expect(validateScript(s)).toEqual([]);
+    expect(claimsForPrompt(s)).toContain(`(${TIKTOK_BONUS_ID}): "${pilot.tiktokBonus.narration}"`);
   });
 });
 

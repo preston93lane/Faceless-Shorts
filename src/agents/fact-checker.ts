@@ -6,7 +6,7 @@
  *      on the reputable list; "supported" needs 2 such sources, otherwise it is downgraded.
  */
 import type { Llm } from "./llm";
-import { type FactCheck, FactCheckSchema, type Script } from "./schemas";
+import { type FactCheck, FactCheckSchema, type Script, TIKTOK_BONUS_ID } from "./schemas";
 import { isReputable, normalizeUrl, TRUSTED_LIST_FOR_PROMPT } from "./sources";
 
 export const MIN_SOURCES = 2;
@@ -40,6 +40,7 @@ export type FactCheckResult = {
 
 export function claimsForPrompt(script: Script): string {
   const beat = new Map(script.beats.map((b) => [b.id, b.narration]));
+  beat.set(TIKTOK_BONUS_ID, script.tiktokBonus.narration);
   return script.claims
     .map((c) => `${c.id}: ${c.claim}\n   Narration it appears in (${c.beatId}): "${beat.get(c.beatId) ?? ""}"`)
     .join("\n");

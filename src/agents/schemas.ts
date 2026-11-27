@@ -18,9 +18,12 @@ export const BeatSchema = z.object({
   visual: z.string().describe("One sentence describing the paper-cutout picture: what is on screen and the single thing that moves."),
 });
 
+/** The id a claim uses when it is made in the TikTok bonus narration rather than in a beat. */
+export const TIKTOK_BONUS_ID = "tiktokBonus";
+
 export const ClaimSchema = z.object({
   id: z.string().describe('"c1", "c2", ...'),
-  beatId: z.string().describe("The beat whose narration makes this claim."),
+  beatId: z.string().describe(`The beat whose narration makes this claim, or "${TIKTOK_BONUS_ID}" when the claim is in the TikTok bonus narration.`),
   claim: z.string().describe("The factual statement in precise, checkable form, including any simplifying assumption."),
 });
 
@@ -117,6 +120,6 @@ export function validateScript(s: Script): string[] {
   if (kid) p.push(`"${kid}" targets kids; the channel is general-audience (no kid keywords in title, description or tags).`);
 
   if (s.claims.length === 0) p.push("No claims listed; every factual statement in the narration must be a claim.");
-  for (const c of s.claims) if (!ids.has(c.beatId)) p.push(`Claim ${c.id} points at unknown beat ${c.beatId}.`);
+  for (const c of s.claims) if (!ids.has(c.beatId) && c.beatId !== TIKTOK_BONUS_ID) p.push(`Claim ${c.id} points at unknown beat ${c.beatId}.`);
   return p;
 }
