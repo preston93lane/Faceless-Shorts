@@ -1,0 +1,21 @@
+[
+  {
+    "id": "hole-through-earth",
+    "title": "What If You Jumped Into a Hole Through the Earth?",
+    "series": "WHAT IF?",
+    "date": "2026-11-27",
+    "templates": [
+      "title",
+      "big-number",
+      "fact",
+      "big-number",
+      "progress",
+      "hero",
+      "arrows",
+      "progress",
+      "compare",
+      "big-number",
+      "hero"
+    ]
+  }
+]
