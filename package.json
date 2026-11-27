@@ -1,0 +1,31 @@
+{
+  "name": "faceless-shorts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Agent pipeline for a faceless curiosity-science channel (YouTube Shorts + TikTok).",
+  "scripts": {
+    "studio": "remotion studio src/video/index.ts",
+    "render": "remotion render src/video/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.0",
+    "@types/react": "19.2.2",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  },
+  "dependencies": {
+    "@remotion/captions": "4.0.547",
+    "@remotion/cli": "4.0.547",
+    "@remotion/fonts": "4.0.547",
+    "@remotion/install-whisper-cpp": "4.0.547",
+    "@remotion/media": "4.0.547",
+    "kokoro-js": "1.2.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.547"
+  }
+}
