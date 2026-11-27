@@ -155,3 +155,12 @@ describe("image generation with a check", () => {
     }
   });
 });
+
+describe("big-number template", () => {
+  it("sizes long numbers to fit the card", async () => {
+    const { numberSize } = await import("../src/video/scenes/templates");
+    expect(numberSize("38")).toBe(160);
+    expect(numberSize("1,000,000,000")).toBe(96);
+    expect(numberSize("1,000,000,000,000")).toBe(76);
+  });
+});

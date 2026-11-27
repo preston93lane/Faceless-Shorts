@@ -233,6 +233,12 @@ const Title: React.FC<SceneProps> = ({ dur, props = {} }) => {
   );
 };
 
+/** How long the big-number counter runs. The spec builder starts it early enough to finish on screen. */
+export const COUNT_S = 0.8;
+
+/** Font size that keeps a number on one line inside the card (13 characters fit at 96 px). */
+export const numberSize = (text: string) => (text.length <= 5 ? 160 : text.length <= 9 ? 130 : text.length <= 13 ? 96 : 76);
+
 /** big-number: a counter that runs up to a value on a cue word, with a unit card and an optional icon. */
 const BigNumber: React.FC<SceneProps> = ({ dur, props = {} }) => {
   const t = useTheme();
@@ -243,7 +249,8 @@ const BigNumber: React.FC<SceneProps> = ({ dur, props = {} }) => {
   const value = num(props.value);
   const from = num(props.from);
   const decimals = num(props.decimals);
-  const p = interpolate(held, [start, start + Math.round(fps * 1.1)], [0, 1], {
+  const countFrames = Math.round(fps * COUNT_S);
+  const p = interpolate(held, [start, start + countFrames], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
@@ -259,12 +266,12 @@ const BigNumber: React.FC<SceneProps> = ({ dur, props = {} }) => {
         </Piece>
       )}
       <Piece seed="num-value" x={540} y={icon ? 880 : 720} at={Math.max(0, start - 4)}>
-        <Card size={text.length > 9 ? 120 : 160} bg={t.colors.accent}>
+        <Card size={numberSize(text)} maxWidth={980} bg={t.colors.accent}>
           {text}
         </Card>
       </Piece>
       {str(props.unit) && (
-        <Piece seed="num-unit" x={540} y={icon ? 1090 : 960} at={start + Math.round(fps * 1.1)} from="up" rotate={-1}>
+        <Piece seed="num-unit" x={540} y={icon ? 1090 : 960} at={start + countFrames} from="up" rotate={-1}>
           <Card size={60}>{str(props.unit)}</Card>
         </Piece>
       )}

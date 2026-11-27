@@ -92,7 +92,8 @@ export function buildSpec(opts: {
           prefix: s.number?.prefix ?? "",
           suffix: s.number?.suffix ?? "",
           unit: s.text ?? "",
-          countAtMs: c1,
+          // The counter (0.8 s) and its unit card must land with time to read them before the cut.
+          countAtMs: Math.min(c1, Math.max(0, dur - 2000)),
         };
         break;
       case "compare":

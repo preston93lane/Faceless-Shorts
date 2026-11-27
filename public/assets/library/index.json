@@ -153,10 +153,10 @@
   },
   "spinal-disc-flat": {
     "key": "spinal-disc-flat",
-    "description": "A single spinal disc (the cushion between two backbones) cut from layered colored paper, seen from a three-quarter angle above so both the top face and the side wall are visible. The disc is shaped like a kidney bean: wide, with one gently indented long edge and smoothly rounded ends, with no wavy or scalloped edges. It is a flat, squashed slab whose side wall is thin, only about one tenth as tall as the disc is wide. The side wall is a slightly darker pale blue strip of paper. The top face has 4 smooth concentric bean-shaped rings in pale blue shades, getting lighter toward the middle. In the center of the top face sits one small, flattened, smooth oval of translucent light-blue paper, the gel core, taking up about one fifth of the top's width. Visible cut paper edges, soft paper shadows, a white sticker border around the whole shape, a plain light background, and no text, letters or numbers.",
+    "description": "The spinal-disc picture squashed to half its height in code (same disc, flattened), so the before/after match exactly.",
     "file": "assets/library/spinal-disc-flat.png",
-    "model": "fal-ai/flux/dev",
-    "seed": 557124474,
+    "model": "derived from spinal-disc",
+    "seed": 83813084,
     "createdAt": "2026-11-27"
   },
   "stopwatch": {
@@ -185,10 +185,10 @@
   },
   "tardigrade": {
     "key": "tardigrade",
-    "description": "Side view of a tardigrade, a microscopic animal, made of layered pale beige cut paper with a white sticker border. The body is a plump cylinder of even thickness from end to end, like a short sausage, with 4 faint vertical segment lines. Both ends are fully rounded and blunt; the rear end does not taper or narrow. At the very front tip of the head is a small round mouth opening: a tiny short tube end shown as a small darker beige circle. There is no smile line, no nostril, no lips and no chin. One tiny dark dot eye sits just above and behind the mouth. Exactly 8 legs total, in 4 pairs. Near side: exactly 4 short, soft, rounded stumpy bumps in light beige with no joints or knees. Far side: exactly 4 matching bumps in slightly darker beige, each peeking out just behind its near-side partner. Three of these pairs hang straight down, evenly spaced along the belly. The fourth pair attaches at the bottom of the rounded rear end and points backward and down. Each leg tip has 3 or 4 tiny dark curved claws. Flat paper shapes with visible layered edges and no painted shading. No tail, ears, snout, nose, antennae, whiskers or text.",
+    "description": "A tardigrade drawn like a chubby little barrel on legs, seen from the side: a smooth plump oval body with three or four soft creases, a rounded head end with a tiny round mouth, and exactly four short stumpy legs visible underneath, evenly spaced from front to back, each ending in two tiny claws. The back end is round with no tail. Pale beige.",
     "file": "assets/library/tardigrade.png",
     "model": "fal-ai/flux/dev",
-    "seed": 866079289,
+    "seed": 69383463,
     "createdAt": "2026-11-27"
   },
   "tardigrade-tun": {
