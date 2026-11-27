@@ -55,9 +55,10 @@ export async function runScriptStage(
   let rounds = 0;
   while ((!check.pass || problems.length) && rounds < MAX_FACT_ROUNDS) {
     rounds++;
+    const prior = { script, result: check };
     script = await reviseScript(llm, script, [...feedbackFrom(check), ...problems]);
     problems = validateScript(script);
-    check = await factCheck(llm, script);
+    check = await factCheck(llm, script, prior);
   }
 
   const spoken = check.pass && problems.length === 0 ? await prepareNarration(llm, script) : null;
@@ -83,7 +84,7 @@ export function reviewMarkdown(r: StageResult, costUsd: number): string {
     ...r.check.claims.map((c) => {
       const claim = s.claims.find((x) => x.id === c.claimId);
       const src = c.acceptedSources.map((x) => `[${x.publisher}](${x.url})`).join(", ") || "none accepted";
-      return `- ${icon[c.verdict]} **${c.claimId}** ${claim?.claim ?? ""}\n  ${c.downgradedBecause ?? c.explanation}${c.suggestedRewrite ? `\n  Suggested: "${c.suggestedRewrite}"` : ""}\n  Sources: ${src}`;
+      return `- ${icon[c.verdict]} **${c.claimId}**${c.reused ? " _(unchanged, verdict from an earlier round)_" : ""} ${claim?.claim ?? ""}\n  ${c.downgradedBecause ?? c.explanation}${c.suggestedRewrite ? `\n  Suggested: "${c.suggestedRewrite}"` : ""}\n  Sources: ${src}`;
     }),
     r.check.notes ? `\n**Checker notes:** ${r.check.notes}` : "",
     r.problems.length ? `\n## Open problems\n${r.problems.map((p) => `- ${p}`).join("\n")}` : "",

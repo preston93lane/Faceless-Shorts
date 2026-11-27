@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import type { z } from "zod";
-import { applyRules, claimsForPrompt, feedbackFrom, sourcesForDescription } from "../src/agents/fact-checker";
+import { applyRules, claimsForPrompt, factCheck, feedbackFrom, searchBudget, sourcesForDescription } from "../src/agents/fact-checker";
 import type { Llm, ResearchRequest, ResearchResult, StructuredRequest } from "../src/agents/llm";
 import { checkSpoken } from "../src/agents/narration-prep";
 import { type FactCheck, fullNarration, type Script, ScriptSchema, TIKTOK_BONUS_ID, tiktokNarration, validateScript } from "../src/agents/schemas";
@@ -149,6 +149,7 @@ describe("voice blends", () => {
 /** A fake model: first fact check fails one claim, the revision fixes it, the second check passes. */
 class FakeLlm implements Llm {
   steps: string[] = [];
+  researched: { user: string; maxSearches: number }[] = [];
   private checks = 0;
   async structured<S extends z.ZodType>(req: StructuredRequest<S>): Promise<z.infer<S>> {
     this.steps.push(`${req.step}:${req.model}`);
@@ -177,6 +178,7 @@ class FakeLlm implements Llm {
   }
   async research(req: ResearchRequest): Promise<ResearchResult> {
     this.steps.push(`${req.step}:opus`);
+    this.researched.push({ user: req.user, maxSearches: req.maxSearches });
     this.checks++;
     return { text: "findings", retrievedUrls: ["https://arxiv.org/abs/1308.1342", "https://phys.org/news/x"], citedUrls: [] };
   }
@@ -198,5 +200,32 @@ describe("script stage", () => {
       "fact-check-structure:haiku",
       "narration-prep:haiku",
     ]);
+  });
+  it("re-researches only the claim that failed, and keeps the others' verdicts and sources", async () => {
+    const llm = new FakeLlm();
+    const r = await runScriptStage(llm, { script: pilot });
+    const [first, second] = llm.researched;
+    const [failed, ...rest] = pilot.claims;
+    expect(first.maxSearches).toBe(searchBudget(pilot.claims.length));
+    expect(second.user).toContain(`${failed.id}: ${failed.claim}`);
+    for (const c of rest) expect(second.user).not.toContain(`${c.id}: ${c.claim}`);
+    expect(second.maxSearches).toBe(searchBudget(1));
+    expect(r.check.claims.map((c) => c.claimId)).toEqual(pilot.claims.map((c) => c.id));
+    expect(r.check.claims[0].reused).toBeUndefined();
+    expect(r.check.claims.slice(1).every((c) => c.reused && c.acceptedSources.length === 2)).toBe(true);
+  });
+  it("re-researches a passed claim when its narration changes", async () => {
+    const supported = (claims: Script["claims"]) => ({
+      pass: true,
+      notes: "",
+      research: "",
+      claims: claims.map((c) => ({ claimId: c.id, verdict: "supported" as const, explanation: "", suggestedRewrite: null, sources: [], acceptedSources: [] })),
+    });
+    const llm = new FakeLlm();
+    const edited: Script = { ...pilot, beats: pilot.beats.map((b) => (b.id === pilot.claims[1].beatId ? { ...b, narration: `${b.narration} Wow.` } : b)) };
+    await factCheck(llm, edited, { script: pilot, result: supported(pilot.claims) });
+    const changed = pilot.claims.filter((c) => c.beatId === pilot.claims[1].beatId).map((c) => c.id);
+    const asked = [...llm.researched[0].user.matchAll(/^(c\d+):/gm)].map((m) => m[1]);
+    expect(asked).toEqual(changed);
   });
 });

@@ -78,7 +78,7 @@ The rule is conservative: **Opus 5.5** handles anything that involves research, 
 | Long-form outline and narration | |
 | Weekly analytics strategy report | |
 
-Estimated LLM cost is about **$0.35 per Short**. Almost all of it sits in the Opus steps, which is where quality matters.
+Estimated LLM cost is about **$1.00–1.50 per Short**. Almost all of it sits in the Opus steps, which is where quality matters. Fact-check research with web search is the largest single item: about $0.035 per search, including the pages Opus reads. The first measured run (pilot 01, 2026-11-27) cost $3.29 because every revision round re-checked the whole script. Revision rounds now re-check only new, changed or failed claims, and research is capped at about 2 searches per claim (16 max).
 
 **Weekly long-form compiler:** each week's 5–7 Shorts on one theme ("Space Week") become a 10-minute deep-dive. It reuses the assets but adds **new connective narration, deeper explanation and chapters**, so it is genuinely more than a stitched compilation; a straight re-upload of Shorts would risk the inauthentic-content flag.
 
@@ -89,7 +89,7 @@ Estimated LLM cost is about **$0.35 per Short**. Almost all of it sits in the Op
 | Layer | Choice | Cost | Why |
 |---|---|---|---|
 | Language | TypeScript (Node 22) | — | One language for the orchestrator and Remotion |
-| LLM | Claude API: **Opus 5.5** for research, planning and review; **Haiku 5.5** for mechanical steps ([routing](#model-routing)); Message Batches (50% off) for non-urgent nightly scripting | ~$0.35 per Short | Quality matters most in scripting, fact-checking and QA |
+| LLM | Claude API: **Opus 5.5** for research, planning and review; **Haiku 5.5** for mechanical steps ([routing](#model-routing)); Message Batches (50% off) for non-urgent nightly scripting | ~$1.00–1.50 per Short | Quality matters most in scripting, fact-checking and QA |
 | Animation | **Remotion** | Free (individuals and teams ≤3) | Code-driven motion graphics; best quality per dollar; official Claude Code agent skills exist |
 | Images | Flux (schnell for drafts, dev/pro for heroes) via fal.ai or Replicate | ~$0.003–0.03 per image | Cheapest decent image API; a style lock keeps the look consistent |
 | Voice | **Kokoro-82M** (local CPU, Apache-2.0); ElevenLabs optional | $0 (or $22/mo) | Free and good; ElevenLabs gives a more distinctive branded voice |
@@ -110,14 +110,14 @@ Estimated LLM cost is about **$0.35 per Short**. Almost all of it sits in the Op
 ### Cost per video (budget tier, recommended to start)
 | Item | Short (45s + TikTok cut) | Long-form (10 min) |
 |---|---|---|
-| Claude (Opus: scout, script, fact-check with web search, storyboard, QA vision; Haiku: mechanical steps) | ~$0.35 | ~$1.50–2.00 |
+| Claude (Opus: scout, script, fact-check with web search, storyboard, QA vision; Haiku: mechanical steps) | ~$1.00–1.50 (script stage measured ~$0.80–1.20) | ~$3–5 |
 | Images (8–14 new; library reuse grows) | ~$0.05–0.30 | ~$0.50–1.00 |
 | Voice (Kokoro) | $0 | $0 |
 | Render (GitHub Actions) | $0 | $0 |
-| **Total** | **≈ $0.45–0.70** | **≈ $2–3** |
+| **Total** | **≈ $1.10–1.80** | **≈ $4–6** |
 
 ### Monthly run cost (30 Shorts + 30 TikToks + 4 long-form)
-- **Budget tier: about $35–50/month.** Claude about $25–30, images about $5–15.
+- **Budget tier: about $60–85/month.** Claude about $50–65, images about $5–15.
 - **Mid tier: about $60–80/month.** Adds the $22/mo ElevenLabs voice and better hero images.
 - **Premium: about $100–150/month.** Adds 1–2 AI video hero shots per Short.
 
@@ -157,7 +157,7 @@ Estimated LLM cost is about **$0.35 per Short**. Almost all of it sits in the Op
 
 ### Accounts and API keys (required for the autonomous pipeline)
 These go into **GitHub Actions secrets**, or this cloud environment's secrets for testing. Never paste them into chat.
-1. **Anthropic API key** (console.anthropic.com), with a ~$30–50/mo budget limit set.
+1. **Anthropic API key** (console.anthropic.com), with a ~$70–90/mo budget limit set.
 2. **New YouTube channel** on a Brand Account, plus a **Google Cloud project** with **YouTube Data API v3** and **YouTube Analytics API** enabled and an OAuth client. I'll generate the refresh-token script.
 3. **TikTok account** (personal creator account; Creator Rewards requires 18+ and an eligible country) plus a **TikTok for Developers app** with Login Kit and Content Posting API (`video.upload`; later `video.publish` + audit). The app review needs a website and privacy-policy URL; I can make a simple GitHub Pages site for that.
 4. **fal.ai or Replicate API key** for images (~$10 prepaid to start).
