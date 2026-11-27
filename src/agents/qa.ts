@@ -132,10 +132,12 @@ export async function visionReview(
   });
 }
 
-/** One frame per shot, 75% of the way through it (after its cue motion), scaled to 360 px wide (enough to read cards; keeps vision tokens low). */
+/** One frame per shot, at its end, scaled to 360 px wide (enough to read cards; keeps vision tokens low). */
 export function extractFrames(file: string, spec: VideoSpec): { shot: number; jpeg: Buffer; atMs: number }[] {
   return spec.scenes.map((s, i) => {
-    const atMs = s.startMs + (s.endMs - s.startMs) * 0.75;
+    // The shot's final state, just before the cut: counters have finished and every card has landed.
+    // (Sampling at 75% caught counters mid-run, which read as wrong numbers.)
+    const atMs = Math.max(s.startMs, s.endMs - 300);
     const jpeg = execFileSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-ss", (atMs / 1000).toFixed(3), "-i", file, "-frames:v", "1", "-vf", "scale=360:-2", "-q:v", "5", "-f", "image2", "-c:v", "mjpeg", "-"], {
       maxBuffer: 20 * 1024 * 1024,
     });

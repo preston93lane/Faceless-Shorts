@@ -38,22 +38,23 @@
     ]
   },
   {
-    "id": "tardigrades-turn-to-glass",
-    "title": "Do Tardigrades Survive Drying Out by Turning to Glass?",
-    "series": "WILD BIOLOGY",
+    "id": "earths-inside-sun-in-rice",
+    "title": "If Every Earth Were a Grain of Rice, How Much Rice Is the Sun?",
+    "series": "SPACE & SCALE",
     "date": "2026-11-27",
     "templates": [
       "title",
+      "big-number",
+      "count",
+      "scale",
       "fact",
       "big-number",
-      "arrows",
-      "fact",
       "compare",
       "hero",
-      "fact",
-      "list",
-      "hero",
       "progress",
+      "big-number",
+      "compare",
+      "list",
       "hero"
     ]
   },
@@ -76,23 +77,22 @@
     ]
   },
   {
-    "id": "earths-inside-sun-in-rice",
-    "title": "If Every Earth Were a Grain of Rice, How Much Rice Is the Sun?",
-    "series": "SPACE & SCALE",
+    "id": "tardigrades-turn-to-glass",
+    "title": "Do Tardigrades Survive Drying Out by Turning to Glass?",
+    "series": "WILD BIOLOGY",
     "date": "2026-11-27",
     "templates": [
       "title",
-      "big-number",
-      "count",
-      "scale",
       "fact",
       "big-number",
+      "arrows",
+      "fact",
       "compare",
       "hero",
-      "progress",
-      "big-number",
-      "compare",
+      "fact",
       "list",
+      "hero",
+      "progress",
       "hero"
     ]
   }
